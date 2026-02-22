@@ -1,0 +1,23 @@
+{
+  "expo": {
+    "name": "GoldLabel",
+    "slug": "goldlabel",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "goldlabel",
+    "ios": {
+      "bundleIdentifier": "com.goldlabel.app",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.goldlabel.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#1a1a1a"
+      }
+    },
+    "plugins": [
+      "expo-asset"
+    ]
+  }
+}
