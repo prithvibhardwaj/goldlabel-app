@@ -21,7 +21,6 @@ app.post('/api/ocr/extract', upload.single('file'), async (req, res) => {
     }
 
     const apiKey = process.env.GOOGLE_CLOUD_VISION_API_KEY;
-    // const apiKey = AIzaSyB5_D6sJvFsEVpSxhNLZSdYVe3JQz52Cqg;
     if (!apiKey) {
       return res.status(500).json({ error: 'OCR service is not configured (missing GOOGLE_CLOUD_VISION_API_KEY).' });
     }
