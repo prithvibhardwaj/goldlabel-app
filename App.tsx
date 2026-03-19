@@ -11,8 +11,9 @@ import {
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import * as ImagePicker from 'expo-image-picker';
+import { supabase } from './utils/supabase';
 
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL ?? 'http://localhost:4000';
+const BACKEND_URL = 'http://172.20.10.6:4000';
 
 export default function App() {
   const [imageUri, setImageUri] = useState<string | null>(null);
@@ -60,8 +61,11 @@ export default function App() {
         Alert.alert('OCR Error', json.error ?? 'Something went wrong.');
         return;
       }
-
-      setOcrText(json.text || 'No text found in image.');
+      const extractedText = json.text || 'No text found in image.';
+      setOcrText(extractedText);
+      console.log("Supabase URL:", process.env.EXPO_PUBLIC_SUPABASE_URL);
+      await saveRawOcrToSupabase(extractedText);
+      // setOcrText(json.text || 'No text found in image.');
     } catch (err) {
       console.error('OCR request failed:', err);
       Alert.alert('Network Error', 'Could not reach the OCR backend. Is the server running?');
@@ -69,6 +73,28 @@ export default function App() {
       setLoading(false);
     }
   };
+
+
+const saveRawOcrToSupabase = async (text: string) => {
+  try {
+    const { data, error } = await supabase
+      .from('Labels') // Your table name
+      .insert([
+        { raw_text: text } 
+      ])
+      .select();
+
+    if (error) {
+      throw error;
+    }
+
+    console.log('Successfully saved to Supabase:', data);
+    return data;
+  } catch (err) {
+    console.error('Supabase Upload Error:', err);
+    Alert.alert('Database Error', 'Could not save the scan results.');
+  }
+};
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
