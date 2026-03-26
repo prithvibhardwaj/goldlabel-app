@@ -59,6 +59,7 @@ export default function FeedbackScreen({ navigation }: any) {
   }
 
   const showPictoText = pictoAnswer === 'no' || pictoAnswer === 'some';
+  const canSubmit = emojiRating !== null && pictoAnswer !== null;
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
@@ -149,7 +150,7 @@ export default function FeedbackScreen({ navigation }: any) {
 
         {/* Footer */}
         <View style={[styles.footer, { paddingBottom: 24 + insets.bottom }]}>
-          <TouchableOpacity onPress={handleSubmit} style={styles.submitBtn} activeOpacity={0.85}>
+          <TouchableOpacity onPress={handleSubmit} style={[styles.submitBtn, !canSubmit && styles.submitBtnDisabled]} activeOpacity={canSubmit ? 0.85 : 1} disabled={!canSubmit}>
             <Text style={styles.submitText}>Submit Feedback</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Dashboard')} style={styles.skipBtn} activeOpacity={0.7}>
@@ -197,6 +198,7 @@ const styles = StyleSheet.create({
   },
   footer: { position: 'absolute', bottom: 0, left: 0, right: 0, paddingHorizontal: 24, paddingTop: 12, gap: 12 },
   submitBtn: { backgroundColor: '#1B3022', borderRadius: 999, paddingVertical: 20, alignItems: 'center', minHeight: 64 },
+  submitBtnDisabled: { backgroundColor: 'rgba(27,48,34,0.3)' },
   submitText: { color: 'white', fontSize: 22, fontWeight: '700', fontFamily: 'Georgia' },
   skipBtn: { alignItems: 'center', paddingVertical: 4 },
   skipText: { fontSize: 15, color: 'rgba(27,48,34,0.5)', fontWeight: '500' },

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
+import { format, addDays } from 'date-fns';
 import {
   TIME_OPTIONS,
   HOW_TO_TAKE_OPTIONS,
@@ -10,6 +11,16 @@ import {
 } from '../components/PictogramData';
 import { OptionSelection } from '../types';
 import { PillIcon } from '../components/CustomIcons';
+
+function parseDurationToDays(text: string): number | null {
+  const t = text.trim().toLowerCase();
+  const match = t.match(/^(\d+)\s*(day|days|week|weeks|month|months)$/);
+  if (!match) return null;
+  const n = parseInt(match[1], 10);
+  if (match[2].startsWith('week')) return n * 7;
+  if (match[2].startsWith('month')) return n * 30;
+  return n;
+}
 
 function ArrowLeftIcon() {
   return (
@@ -44,6 +55,12 @@ export default function PrintPreviewScreen({ navigation, route }: any) {
   const inc = (key: string) => includeOnLabel?.[key] !== false;
   const showDuration = inc('howLong') && howLong?.trim().length > 0;
   const showOthers = inc('others') && others?.trim().length > 0;
+
+  const durationDays = showDuration ? parseDurationToDays(howLong) : null;
+  const today = new Date();
+  const durationDisplay = durationDays != null
+    ? `${format(today, 'd MMM')} – ${format(addDays(today, durationDays), 'd MMM yyyy')}`
+    : howLong?.trim();
 
   const sections: { key: string; label: string; content: React.ReactElement | null }[] = [];
 
@@ -134,7 +151,7 @@ export default function PrintPreviewScreen({ navigation, route }: any) {
           {(showDuration || showOthers) && (
             <View style={styles.textRow}>
               <Text style={styles.textRowText}>
-                {showDuration ? `Take for ${howLong}` : ''}{showDuration && showOthers ? '  ·  ' : ''}{showOthers ? others : ''}
+                {showDuration ? durationDisplay : ''}{showDuration && showOthers ? '  ·  ' : ''}{showOthers ? others : ''}
               </Text>
             </View>
           )}

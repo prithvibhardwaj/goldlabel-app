@@ -8,6 +8,7 @@ import {
   StyleSheet,
   FlatList,
 } from 'react-native';
+import { format as formatDate, addDays } from 'date-fns';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path, Circle } from 'react-native-svg';
 import {
@@ -19,6 +20,16 @@ import {
 } from '../components/PictogramData';
 import { OptionSelection } from '../types';
 import { PillIcon } from '../components/CustomIcons';
+
+function parseDurationToDays(text: string): number | null {
+  const t = text.trim().toLowerCase();
+  const match = t.match(/^(\d+)\s*(day|days|week|weeks|month|months)$/);
+  if (!match) return null;
+  const n = parseInt(match[1], 10);
+  if (match[2].startsWith('week')) return n * 7;
+  if (match[2].startsWith('month')) return n * 30;
+  return n;
+}
 
 type LabelFormat = 'box' | 'bottle' | 'ziplock';
 const FORMAT_OPTIONS: { id: LabelFormat; label: string; emoji: string; desc: string }[] = [
@@ -232,6 +243,12 @@ function LiveLabel({
   const showDuration = inc('howLong') && howLong?.trim().length > 0;
   const showOthers = inc('others') && others?.trim().length > 0;
 
+  const durationDays = showDuration ? parseDurationToDays(howLong) : null;
+  const today = new Date();
+  const durationDisplay = durationDays != null
+    ? `${formatDate(today, 'd MMM')} – ${formatDate(addDays(today, durationDays), 'd MMM yyyy')}`
+    : howLong?.trim();
+
   const cats: { key: string; label: string; content: React.ReactElement | null }[] = [];
 
   if (inc('timeOfDay') && Object.keys(timeSelections).length > 0) {
@@ -298,7 +315,7 @@ function LiveLabel({
       {(showDuration || showOthers) && (
         <View style={styles.textRow}>
           <Text style={styles.textRowContent}>
-            {showDuration ? `Take for ${howLong}` : ''}{showDuration && showOthers ? '  ·  ' : ''}{showOthers ? others : ''}
+            {showDuration ? durationDisplay : ''}{showDuration && showOthers ? '  ·  ' : ''}{showOthers ? others : ''}
           </Text>
         </View>
       )}

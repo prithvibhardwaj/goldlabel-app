@@ -151,7 +151,7 @@ export default function DashboardScreen({ navigation }: any) {
             style={styles.contactRow}
             activeOpacity={0.7}
           >
-            <View style={styles.contactIcon}><PhoneIcon /></View>
+            <View style={[styles.contactIcon, styles.contactIconWrapper]}><PhoneIcon /></View>
             <View>
               <Text style={styles.contactLabel}>Hotline</Text>
               <Text style={styles.contactValue}>1800-222-0222</Text>
@@ -163,7 +163,7 @@ export default function DashboardScreen({ navigation }: any) {
             style={styles.contactRow}
             activeOpacity={0.7}
           >
-            <View style={styles.contactIcon}><MailIcon /></View>
+            <View style={[styles.contactIcon, styles.contactIconWrapper]}><MailIcon /></View>
             <View>
               <Text style={styles.contactLabel}>Email</Text>
               <Text style={styles.contactValue}>help@goldlabel.sg</Text>
@@ -179,7 +179,7 @@ export default function DashboardScreen({ navigation }: any) {
           style={styles.ctaButton}
           activeOpacity={0.85}
         >
-          <ScanCameraIcon />
+          <View style={styles.ctaIconWrapper}><ScanCameraIcon /></View>
           <Text style={styles.ctaText}>Scan Label</Text>
         </TouchableOpacity>
       </View>
@@ -202,24 +202,26 @@ const styles = StyleSheet.create({
   emptyState: { backgroundColor: 'rgba(255,255,255,0.6)', borderRadius: 24, padding: 48, alignItems: 'center', marginTop: 16 },
   emptyTitle: { fontSize: 22, fontWeight: '700', color: 'rgba(27,48,34,0.5)', fontFamily: 'Georgia', marginTop: 20, marginBottom: 8 },
   emptySubtitle: { fontSize: 17, color: 'rgba(27,48,34,0.4)', textAlign: 'center' },
-  list: { gap: 16, paddingTop: 4 },
-  card: { backgroundColor: 'rgba(255,255,255,0.7)', borderRadius: 20, paddingHorizontal: 24, paddingVertical: 20, minHeight: 88 },
-  cardRow: { flexDirection: 'row', alignItems: 'center', gap: 16 },
-  cardInfo: { flex: 1 },
+  list: { paddingTop: 4 },
+  card: { backgroundColor: 'rgba(255,255,255,0.7)', borderRadius: 20, paddingHorizontal: 24, paddingVertical: 20, minHeight: 88, marginBottom: 16 },
+  cardRow: { flexDirection: 'row', alignItems: 'center', width: '100%' },
+  cardInfo: { flex: 1, marginRight: 16 },
   cardTime: { fontSize: 30, fontWeight: '700', color: '#1B3022', fontFamily: 'Georgia', lineHeight: 36 },
   cardDate: { fontSize: 17, color: 'rgba(27,48,34,0.75)', marginTop: 2 },
   cardRelative: { fontSize: 13, color: 'rgba(27,48,34,0.45)', marginTop: 2 },
   thumbnail: { width: 80, height: 80, backgroundColor: 'white', borderRadius: 16, borderWidth: 3, borderColor: 'rgba(27,48,34,0.15)', alignItems: 'center', justifyContent: 'center' },
-  thumbnailGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 3, padding: 4, width: 62, height: 62 },
-  thumbCell: { width: 26, height: 26, borderRadius: 6 },
+  thumbnailGrid: { flexDirection: 'row', flexWrap: 'wrap', padding: 4, width: 62, height: 62 },
+  thumbCell: { width: 26, height: 26, borderRadius: 6, marginRight: 3, marginBottom: 3 },
   contactSection: { marginTop: 32, backgroundColor: 'rgba(255,255,255,0.5)', borderRadius: 20, padding: 20 },
   contactHeading: { fontSize: 11, fontWeight: '700', color: 'rgba(27,48,34,0.4)', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 12 },
-  contactRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  contactRow: { flexDirection: 'row', alignItems: 'center' },
+  contactIconWrapper: { marginRight: 12 },
   contactIcon: { width: 36, height: 36, backgroundColor: 'rgba(27,48,34,0.08)', borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
   contactLabel: { fontSize: 13, color: 'rgba(27,48,34,0.5)' },
   contactValue: { fontSize: 16, fontWeight: '600', color: '#1B3022' },
   divider: { height: 1, backgroundColor: 'rgba(27,48,34,0.08)', marginVertical: 12 },
   footer: { position: 'absolute', bottom: 0, left: 0, right: 0, paddingHorizontal: 24, paddingTop: 16, backgroundColor: 'transparent' },
-  ctaButton: { backgroundColor: '#1B3022', borderRadius: 999, paddingVertical: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, minHeight: 64 },
+  ctaButton: { backgroundColor: '#1B3022', borderRadius: 999, paddingVertical: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', minHeight: 64 },
+  ctaIconWrapper: { marginRight: 20 },
   ctaText: { color: 'white', fontSize: 22, fontWeight: '700', fontFamily: 'Georgia' },
 });
