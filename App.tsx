@@ -14,7 +14,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { supabase } from './utils/supabase';
 
 // Use your local IP for physical device testing
-const BACKEND_URL = 'http://172.20.10.6:4000';
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL || 'http://192.168.88.9:4000';
 
 // Typescript interface matching your specific JSON schema
 interface PictogramOption {
