@@ -3,9 +3,11 @@
     "name": "GoldLabel",
     "slug": "goldlabel",
     "version": "1.0.0",
+    "icon": "./assets/icon.jpg",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "scheme": "goldlabel",
+    "newArchEnabled": false,
     "ios": {
       "bundleIdentifier": "com.goldlabel.app",
       "supportsTablet": true,
@@ -16,11 +18,26 @@
     "android": {
       "package": "com.goldlabel.app",
       "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.jpg",
         "backgroundColor": "#1a1a1a"
-      }
+      },
+      "permissions": [
+        "INTERNET",
+        "ACCESS_NETWORK_STATE",
+        "CAMERA",
+        "READ_MEDIA_IMAGES",
+        "READ_EXTERNAL_STORAGE"
+      ]
     },
     "plugins": [
-      "expo-asset"
+      "expo-asset",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow GoldLabel to access your photos to scan medication labels.",
+          "cameraPermission": "Allow GoldLabel to access your camera to scan medication labels."
+        }
+      ]
     ],
     "extra": {
       "eas": {

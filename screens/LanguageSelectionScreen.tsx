@@ -6,11 +6,19 @@ import Svg, { Path } from 'react-native-svg';
 interface Language { code: string; name: string; nativeName: string; }
 
 const LANGUAGES: Language[] = [
+  { code: 'none', name: 'No text', nativeName: 'Pictogram only' },
   { code: 'en', name: 'English', nativeName: 'English' },
-  { code: 'ta', name: 'Tamil', nativeName: 'தமிழ்' },
-  { code: 'zh', name: 'Mandarin', nativeName: '中文' },
+  { code: 'bn', name: 'Bengali', nativeName: 'বাংলা' },
   { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी' },
+  { code: 'kn', name: 'Kannada', nativeName: 'ಕನ್ನಡ' },
+  { code: 'ml', name: 'Malayalam', nativeName: 'മലയാളം' },
+  { code: 'te', name: 'Telugu', nativeName: 'తెలుగు' },
+  { code: 'my', name: 'Burmese', nativeName: 'မြန်မာဘာသာ' },
+  { code: 'th', name: 'Thai', nativeName: 'ภาษาไทย' },
+  { code: 'vi', name: 'Vietnamese', nativeName: 'Tiếng Việt' },
+  { code: 'zh', name: 'Chinese', nativeName: '中文' },
   { code: 'ms', name: 'Malay', nativeName: 'Bahasa Melayu' },
+  { code: 'ta', name: 'Tamil', nativeName: 'தமிழ்' },
 ];
 
 function ArrowLeftIcon() {
