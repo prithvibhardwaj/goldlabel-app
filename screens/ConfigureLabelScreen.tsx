@@ -18,7 +18,6 @@ import {
   getIcon,
   PictogramOption,
 } from '../components/PictogramData';
-import { OptionSelection } from '../types';
 import { PillIcon } from '../components/CustomIcons';
 
 function parseDurationToDays(text: string): number | null {
@@ -222,8 +221,8 @@ function LiveLabel({
   format,
   timeSelections,
   pillCount,
-  howToTakeSelection,
-  sideEffectSelection,
+  howToTakeSelections,
+  sideEffectSelections,
   howLong,
   others,
   includeOnLabel,
@@ -232,8 +231,8 @@ function LiveLabel({
   format: LabelFormat;
   timeSelections: Record<string, string>;
   pillCount: number;
-  howToTakeSelection: OptionSelection;
-  sideEffectSelection: OptionSelection;
+  howToTakeSelections: Record<string, string>;
+  sideEffectSelections: Record<string, string>;
   howLong: string;
   others: string;
   includeOnLabel: Record<string, boolean>;
@@ -277,11 +276,33 @@ function LiveLabel({
       ),
     });
   }
-  if (inc('howToTake')) {
-    cats.push({ key: 'howToTake', label: 'How to take', content: getIcon(HOW_TO_TAKE_OPTIONS, howToTakeSelection.optionId, howToTakeSelection.variantId, format === 'ziplock' ? 28 : 36) });
+  if (inc('howToTake') && Object.keys(howToTakeSelections).length > 0) {
+    const iconSize = Object.keys(howToTakeSelections).length > 2 ? 20 : Object.keys(howToTakeSelections).length > 1 ? 24 : (format === 'ziplock' ? 28 : 36);
+    cats.push({
+      key: 'howToTake',
+      label: 'How to take',
+      content: (
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+          {HOW_TO_TAKE_OPTIONS.filter((o) => o.id in howToTakeSelections).map((o, i) => (
+            <View key={i}>{getIcon(HOW_TO_TAKE_OPTIONS, o.id, howToTakeSelections[o.id], iconSize)}</View>
+          ))}
+        </View>
+      ),
+    });
   }
-  if (inc('sideEffects')) {
-    cats.push({ key: 'sideEffects', label: 'Side effects', content: getIcon(SIDE_EFFECT_OPTIONS, sideEffectSelection.optionId, sideEffectSelection.variantId, format === 'ziplock' ? 28 : 36) });
+  if (inc('sideEffects') && Object.keys(sideEffectSelections).length > 0) {
+    const iconSize = Object.keys(sideEffectSelections).length > 2 ? 20 : Object.keys(sideEffectSelections).length > 1 ? 24 : (format === 'ziplock' ? 28 : 36);
+    cats.push({
+      key: 'sideEffects',
+      label: 'Side effects',
+      content: (
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+          {SIDE_EFFECT_OPTIONS.filter((o) => o.id in sideEffectSelections).map((o, i) => (
+            <View key={i}>{getIcon(SIDE_EFFECT_OPTIONS, o.id, sideEffectSelections[o.id], iconSize)}</View>
+          ))}
+        </View>
+      ),
+    });
   }
 
   const isZiplock = format === 'ziplock';
@@ -341,8 +362,8 @@ export default function ConfigureLabelScreen({ navigation, route }: any) {
   };
 
   const [timeSelections, setTimeSelections] = useState<Record<string, string>>({ morning: 'v0' });
-  const [howToTakeSelection, setHowToTakeSelection] = useState<OptionSelection>({ optionId: 'crush', variantId: 'v0' });
-  const [sideEffectSelection, setSideEffectSelection] = useState<OptionSelection>({ optionId: 'drowsiness', variantId: 'v0' });
+  const [howToTakeSelections, setHowToTakeSelections] = useState<Record<string, string>>({ crush: 'v0' });
+  const [sideEffectSelections, setSideEffectSelections] = useState<Record<string, string>>({ drowsiness: 'v0' });
   const [pillCount, setPillCount] = useState(parseCount(ocrDosage));
   const [labelFormat, setLabelFormat] = useState<LabelFormat>('box');
   const [openSheet, setOpenSheet] = useState<string | null>(null);
@@ -351,8 +372,8 @@ export default function ConfigureLabelScreen({ navigation, route }: any) {
     navigation.navigate('PrintPreview', {
       timeSelections,
       pillCount,
-      howToTakeSelection,
-      sideEffectSelection,
+      howToTakeSelections,
+      sideEffectSelections,
       language,
       howLong,
       others,
@@ -386,8 +407,8 @@ export default function ConfigureLabelScreen({ navigation, route }: any) {
             format={labelFormat}
             timeSelections={timeSelections}
             pillCount={pillCount}
-            howToTakeSelection={howToTakeSelection}
-            sideEffectSelection={sideEffectSelection}
+            howToTakeSelections={howToTakeSelections}
+            sideEffectSelections={sideEffectSelections}
             howLong={howLong}
             others={others}
             includeOnLabel={includeOnLabel}
@@ -456,18 +477,42 @@ export default function ConfigureLabelScreen({ navigation, route }: any) {
         visible={openSheet === 'howToTake'}
         title="How to Take Medication"
         options={HOW_TO_TAKE_OPTIONS}
-        currentOptionId={howToTakeSelection.optionId}
-        currentVariantId={howToTakeSelection.variantId}
-        onSelect={(optionId, variantId) => { setHowToTakeSelection({ optionId, variantId }); setOpenSheet(null); }}
+        multiSelect
+        multiSelections={howToTakeSelections}
+        onMultiToggle={(optionId, variantId) => {
+          setHowToTakeSelections((prev) => {
+            if (optionId in prev) {
+              if (Object.keys(prev).length > 1) {
+                const next = { ...prev };
+                delete next[optionId];
+                return next;
+              }
+              return { ...prev, [optionId]: variantId };
+            }
+            return { ...prev, [optionId]: variantId };
+          });
+        }}
         onClose={() => setOpenSheet(null)}
       />
       <PickerSheet
         visible={openSheet === 'sideEffects'}
         title="Side Effects"
         options={SIDE_EFFECT_OPTIONS}
-        currentOptionId={sideEffectSelection.optionId}
-        currentVariantId={sideEffectSelection.variantId}
-        onSelect={(optionId, variantId) => { setSideEffectSelection({ optionId, variantId }); setOpenSheet(null); }}
+        multiSelect
+        multiSelections={sideEffectSelections}
+        onMultiToggle={(optionId, variantId) => {
+          setSideEffectSelections((prev) => {
+            if (optionId in prev) {
+              if (Object.keys(prev).length > 1) {
+                const next = { ...prev };
+                delete next[optionId];
+                return next;
+              }
+              return { ...prev, [optionId]: variantId };
+            }
+            return { ...prev, [optionId]: variantId };
+          });
+        }}
         onClose={() => setOpenSheet(null)}
       />
     </View>

@@ -9,7 +9,6 @@ import {
   SIDE_EFFECT_OPTIONS,
   getIcon,
 } from '../components/PictogramData';
-import { OptionSelection } from '../types';
 import { PillIcon } from '../components/CustomIcons';
 
 function parseDurationToDays(text: string): number | null {
@@ -45,12 +44,16 @@ export default function PrintPreviewScreen({ navigation, route }: any) {
   const {
     timeSelections = { morning: 'v0' } as Record<string, string>,
     pillCount = 1,
-    howToTakeSelection = { optionId: 'crush', variantId: 'v0' } as OptionSelection,
-    sideEffectSelection = { optionId: 'drowsiness', variantId: 'v0' } as OptionSelection,
+    howToTakeSelections = { crush: 'v0' } as Record<string, string>,
+    sideEffectSelections = { drowsiness: 'v0' } as Record<string, string>,
     howLong = '',
     others = '',
     includeOnLabel = {},
+    labelFormat = 'box',
   } = route.params || {};
+
+  const isZiplock = labelFormat === 'ziplock';
+  const isBottle = labelFormat === 'bottle';
 
   const inc = (key: string) => includeOnLabel?.[key] !== false;
   const showDuration = inc('howLong') && howLong?.trim().length > 0;
@@ -92,19 +95,33 @@ export default function PrintPreviewScreen({ navigation, route }: any) {
     });
   }
 
-  if (inc('howToTake')) {
+  if (inc('howToTake') && Object.keys(howToTakeSelections).length > 0) {
+    const iconSize = Object.keys(howToTakeSelections).length > 2 ? 22 : Object.keys(howToTakeSelections).length > 1 ? 30 : 40;
     sections.push({
       key: 'howToTake',
       label: 'How to take',
-      content: getIcon(HOW_TO_TAKE_OPTIONS, howToTakeSelection.optionId, howToTakeSelection.variantId, 40),
+      content: (
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+          {HOW_TO_TAKE_OPTIONS.filter((o) => o.id in howToTakeSelections).map((o, i) => (
+            <View key={i}>{getIcon(HOW_TO_TAKE_OPTIONS, o.id, howToTakeSelections[o.id], iconSize)}</View>
+          ))}
+        </View>
+      ),
     });
   }
 
-  if (inc('sideEffects')) {
+  if (inc('sideEffects') && Object.keys(sideEffectSelections).length > 0) {
+    const iconSize = Object.keys(sideEffectSelections).length > 2 ? 22 : Object.keys(sideEffectSelections).length > 1 ? 30 : 40;
     sections.push({
       key: 'sideEffects',
       label: 'Side effects',
-      content: getIcon(SIDE_EFFECT_OPTIONS, sideEffectSelection.optionId, sideEffectSelection.variantId, 40),
+      content: (
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+          {SIDE_EFFECT_OPTIONS.filter((o) => o.id in sideEffectSelections).map((o, i) => (
+            <View key={i}>{getIcon(SIDE_EFFECT_OPTIONS, o.id, sideEffectSelections[o.id], iconSize)}</View>
+          ))}
+        </View>
+      ),
     });
   }
 
@@ -132,14 +149,17 @@ export default function PrintPreviewScreen({ navigation, route }: any) {
         {/* Label card */}
         <View style={styles.labelCard}>
           {sections.length > 0 && (
-            <View style={{ flexDirection: 'row' }}>
+            <View style={isZiplock ? {} : isBottle ? { flexDirection: 'row' } : { flexDirection: 'row', flexWrap: 'wrap' }}>
               {sections.map((sec, i) => (
                 <View
                   key={sec.key}
                   style={[
                     styles.section,
-                    i > 0 && styles.sectionBorderLeft,
-                    { width: `${100 / sections.length}%` },
+                    isBottle && i > 0 && styles.sectionBorderLeft,
+                    !isZiplock && !isBottle && i % 2 === 1 && styles.sectionBorderLeft,
+                    !isZiplock && !isBottle && i >= 2 && styles.sectionBorderTop,
+                    isZiplock && i > 0 && styles.sectionBorderTop,
+                    { width: isZiplock ? '100%' : isBottle ? `${100 / sections.length}%` : '50%', minHeight: isZiplock ? 52 : 72 },
                   ]}
                 >
                   <View style={styles.sectionContent}>{sec.content}</View>
@@ -197,6 +217,7 @@ const styles = StyleSheet.create({
   },
   section: { alignItems: 'center', justifyContent: 'center', paddingVertical: 20, paddingHorizontal: 8, gap: 8 },
   sectionBorderLeft: { borderLeftWidth: 1, borderLeftColor: 'rgba(27,48,34,0.1)' },
+  sectionBorderTop: { borderTopWidth: 1, borderTopColor: 'rgba(27,48,34,0.1)' },
   sectionContent: { minHeight: 44, alignItems: 'center', justifyContent: 'center' },
   sectionLabel: { fontSize: 8, fontWeight: '700', color: '#1B3022', textTransform: 'uppercase', letterSpacing: 1, textAlign: 'center' },
   textRow: { borderTopWidth: 1, borderTopColor: 'rgba(27,48,34,0.1)', marginHorizontal: 16, paddingVertical: 12 },

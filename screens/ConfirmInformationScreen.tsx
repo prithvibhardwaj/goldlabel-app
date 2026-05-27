@@ -130,7 +130,14 @@ export default function ConfirmInformationScreen({ navigation, route }: any) {
 
       navigation.navigate('LanguageSelection', { formData, includeOnLabel, labelId: savedId });
     } catch (err: any) {
-      Alert.alert('Save Failed', 'Could not save to database. Continuing without saving.', [
+      console.error('Supabase save error:', err);
+      const detail = [
+        err?.message && `Message: ${err.message}`,
+        err?.code && `Code: ${err.code}`,
+        err?.details && `Details: ${err.details}`,
+        err?.hint && `Hint: ${err.hint}`,
+      ].filter(Boolean).join('\n') || JSON.stringify(err);
+      Alert.alert('Save Failed', detail || 'Could not save to database.', [
         {
           text: 'Continue',
           onPress: () => navigation.navigate('LanguageSelection', { formData, includeOnLabel, labelId: 'local' }),
@@ -212,13 +219,18 @@ export default function ConfirmInformationScreen({ navigation, route }: any) {
                     placeholderTextColor="rgba(27,48,34,0.35)"
                   />
                 ) : (
-                  <View style={[styles.displayBox, isEmpty && styles.displayBoxEmpty]}>
+                  <TouchableOpacity
+                    onPress={() => included && setEditingFields((prev) => ({ ...prev, [field.key]: true }))}
+                    disabled={!included}
+                    activeOpacity={0.7}
+                    style={[styles.displayBox, isEmpty && styles.displayBoxEmpty]}
+                  >
                     {isEmpty ? (
                       <Text style={styles.placeholderText}>{field.placeholder}</Text>
                     ) : (
                       <Text style={styles.displayText}>{value}</Text>
                     )}
-                  </View>
+                  </TouchableOpacity>
                 )}
 
                 <View style={styles.toggleRow}>

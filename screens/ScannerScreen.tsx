@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Animated,
   Alert,
+  Linking,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
@@ -52,19 +53,34 @@ export default function ScannerScreen({ navigation }: any) {
 
   const handleCapture = async () => {
     setScanning(true);
-    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    const { status, canAskAgain } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== 'granted') {
-      Alert.alert('Permission required', 'Camera access is needed to scan labels.');
       setScanning(false);
+      if (canAskAgain) {
+        Alert.alert('Permission required', 'Camera access is needed to scan labels.');
+      } else {
+        Alert.alert(
+          'Camera permission denied',
+          'Please enable camera access for GoldLabel in your phone settings.',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            { text: 'Open Settings', onPress: () => Linking.openSettings() },
+          ]
+        );
+      }
       return;
     }
     const result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 0.8,
+      base64: true,
     });
     setScanning(false);
     if (!result.canceled && result.assets[0]) {
-      navigation.navigate('Processing', { imageUri: result.assets[0].uri });
+      navigation.navigate('Processing', {
+        imageUri: result.assets[0].uri,
+        imageBase64: result.assets[0].base64,
+      });
     }
   };
 
@@ -77,9 +93,13 @@ export default function ScannerScreen({ navigation }: any) {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 0.8,
+      base64: true,
     });
     if (!result.canceled && result.assets[0]) {
-      navigation.navigate('Processing', { imageUri: result.assets[0].uri });
+      navigation.navigate('Processing', {
+        imageUri: result.assets[0].uri,
+        imageBase64: result.assets[0].base64,
+      });
     }
   };
 
