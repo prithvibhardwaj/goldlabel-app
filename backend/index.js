@@ -14,6 +14,7 @@ const upload = multer({
 });
 
 app.use(cors());
+app.use(express.json({ limit: '10mb' }));
 
 // --- Google Gen AI (Gemini Developer API) ---
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
@@ -115,12 +116,16 @@ async function parseMedicationLabel(ocrText) {
 // --- Main Route ---
 app.post('/api/ocr/extract', upload.single('file'), async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ error: 'No file uploaded.' });
+    const apiKey = process.env.GOOGLE_CLOUD_VISION_API_KEY;
+    let imageBase64 = req.body?.imageBase64;
+
+    if (!imageBase64 && req.file) {
+      imageBase64 = req.file.buffer.toString('base64');
     }
 
-    const apiKey = process.env.GOOGLE_CLOUD_VISION_API_KEY;
-    const imageBase64 = req.file.buffer.toString('base64');
+    if (!imageBase64) {
+      return res.status(400).json({ error: 'No image provided.' });
+    }
 
     // 1. Get raw text from Google Vision
     const visionResponse = await fetch(

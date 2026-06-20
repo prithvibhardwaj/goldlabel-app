@@ -2,8 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Alert } from 'react-native';
 import { GeminiResponse } from '../types';
 
-const VISION_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_CLOUD_VISION_API_KEY || '';
-const GEMINI_API_KEY = process.env.EXPO_PUBLIC_GEMINI_API_KEY || '';
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 const MEDICATION_SCHEMA = {
   type: 'object',
@@ -114,64 +113,21 @@ export default function ProcessingScreen({ navigation, route }: any) {
 
   const processImage = async () => {
     try {
+      if (!BACKEND_URL) throw new Error('Backend URL not configured. Set EXPO_PUBLIC_BACKEND_URL.');
       if (!imageBase64) throw new Error('No image provided');
 
-      // 1. Call Google Vision API for OCR
-      const visionResponse = await fetch(
-        `https://vision.googleapis.com/v1/images:annotate?key=${VISION_API_KEY}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            requests: [{
-              image: { content: imageBase64 },
-              features: [{ type: 'DOCUMENT_TEXT_DETECTION' }],
-            }],
-          }),
-        }
-      );
+      const backendResponse = await fetch(`${BACKEND_URL}/api/ocr/extract`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageBase64 }),
+      });
 
-      const visionJson = await visionResponse.json();
-      if (!visionResponse.ok || visionJson.error) {
-        throw new Error(visionJson.error?.message || 'Vision API request failed.');
+      const backendJson = await backendResponse.json();
+      if (!backendResponse.ok || backendJson.error) {
+        throw new Error(backendJson.error || 'Backend OCR processing failed.');
       }
 
-      const extractedText: string = visionJson.responses?.[0]?.fullTextAnnotation?.text || '';
-      if (!extractedText) throw new Error('Could not detect any text in the image.');
-
-      // 3. Call Gemini API to parse text into structured data
-      const prompt = `Extract medication information from the following OCR text.
-Return the data strictly following this JSON schema: ${JSON.stringify(MEDICATION_SCHEMA)}
-
-Instructions:
-1. The 'raw_text' field MUST be the exact text provided below.
-2. For 'suggested_options', provide 2-3 logical options based on the text.
-3. Set 'selected_pictogram_id' to the best match from the suggested options.
-4. Ensure 'pictogram_id' is a slug-style string (e.g., 'morning-1', '2-pills').
-
-OCR Text: "${extractedText}"`;
-
-      const geminiResponse = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: { responseMimeType: 'application/json' },
-          }),
-        }
-      );
-
-      const geminiJson = await geminiResponse.json();
-      if (!geminiResponse.ok || geminiJson.error) {
-        throw new Error(geminiJson.error?.message || 'Gemini API request failed.');
-      }
-
-      const textContent = geminiJson.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (!textContent) throw new Error('No response from Gemini API.');
-
-      const data: GeminiResponse = JSON.parse(textContent);
+      const data: GeminiResponse = backendJson;
       navigation.replace('ConfirmInformation', { medicationData: data });
     } catch (err: any) {
       Alert.alert(
