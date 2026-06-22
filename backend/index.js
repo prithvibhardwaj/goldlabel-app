@@ -20,71 +20,23 @@ app.use(express.json({ limit: '10mb' }));
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 const MEDICATION_SCHEMA = {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "MedicationLabelTrainingData",
-  "type": "object",
-  "required": ["raw_text", "medication_name", "pictogram_categories"],
-  "properties": {
-    "raw_text": { "type": "string" },
-    "medication_name": { "type": "string" },
-    "pictogram_categories": {
-      "type": "object",
-      "required": ["time_of_day", "dosage", "special_instructions"],
-      "properties": {
-        "time_of_day": {
-          "type": "object",
-          "required": ["suggested_options", "selected_pictogram_id"],
-          "properties": {
-            "suggested_options": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "required": ["pictogram_id", "label"],
-                "properties": {
-                  "pictogram_id": { "type": "string" },
-                  "label": { "type": "string" }
-                }
-              }
-            },
-            "selected_pictogram_id": { "type": ["string", "null"] }
-          }
-        },
-        "dosage": {
-          "type": "object",
-          "required": ["suggested_options", "selected_pictogram_id"],
-          "properties": {
-            "suggested_options": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "required": ["pictogram_id", "label"],
-                "properties": {
-                  "pictogram_id": { "type": "string" },
-                  "label": { "type": "string" }
-                }
-              }
-            },
-            "selected_pictogram_id": { "type": ["string", "null"] }
-          }
-        },
-        "special_instructions": {
-          "type": "object",
-          "required": ["suggested_options", "selected_pictogram_id"],
-          "properties": {
-            "suggested_options": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "required": ["pictogram_id", "label"],
-                "properties": {
-                  "pictogram_id": { "type": "string" },
-                  "label": { "type": "string" }
-                }
-              }
-            },
-            "selected_pictogram_id": { "type": ["string", "null"] }
-          }
-        }
+  type: "object",
+  required: ["raw_ocr_reference", "medication_name", "language", "pictogram_categories", "confidence", "requires_review"],
+  properties: {
+    raw_ocr_reference: { type: "string" },
+    medication_name: { type: "string" },
+    language: { type: "string", enum: ["none","en","bn","hi","kn","ml","te","my","th","vi","zh","ms","ta"] },
+    confidence: { type: "number" },
+    requires_review: { type: "boolean" },
+    pictogram_categories: {
+      type: "object",
+      properties: {
+        how_to_take:   { type: ["string", "null"] },
+        side_effects:  { type: ["string", "null"] },
+        duration:      { type: ["string", "null"] },
+        dosage:        { type: ["string", "null"] },
+        time_of_day:   { type: ["string", "null"] },
+        precautions:   { type: ["string", "null"] }
       }
     }
   }
@@ -94,13 +46,16 @@ async function parseMedicationLabel(ocrText) {
   const prompt = `
     Extract medication information from the following OCR text.
     Return the data strictly following this JSON schema: ${JSON.stringify(MEDICATION_SCHEMA)}
-    
+
     Instructions:
-    1. The 'raw_text' field MUST be the exact text provided below.
-    2. For 'suggested_options', provide 2-3 logical options based on the text.
-    3. Set 'selected_pictogram_id' to the best match from the suggested options.
-    4. Ensure 'pictogram_id' is a slug-style string (e.g., 'morning-1', '2-pills').
-    
+    1. The 'raw_ocr_reference' field MUST be the exact OCR text provided below, copied verbatim.
+    2. Use ONLY information explicitly found in the OCR text. Do NOT invent dosage, duration, timing, or warnings.
+    3. For each pictogram category, pick ONE pictogram ID that best matches the label, or null if not mentioned.
+    4. Pictogram IDs MUST use the format "category.action" (e.g. "dosage.tablet_1", "time_of_day.twice_daily"). Do NOT invent new IDs.
+    5. Set requires_review to true if you are uncertain about any field.
+    6. Set confidence to a number between 0 and 1 based on how clearly the label states the information.
+    7. Return valid JSON only — no explanation, no markdown, no code fences.
+
     OCR Text: "${ocrText}"
   `;
 
