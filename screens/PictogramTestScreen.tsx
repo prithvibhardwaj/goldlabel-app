@@ -81,6 +81,11 @@ function ArrowLeftIcon() {
 function PictogramTile({ row }: { row: PictogramRow }) {
   const [status, setStatus] = useState<'loading' | 'ok' | 'error'>('loading');
   const uri = getPublicUrl(row.asset_path);
+  // Debug: log path and resolved URI to help diagnose runtime issues
+  // (visible in Expo logs / Metro console)
+  useEffect(() => {
+    console.log('Pictogram asset_path ->', row.asset_path, 'publicUri ->', uri);
+  }, [row.asset_path, uri]);
 
   return (
     <View style={styles.tile}>
@@ -97,7 +102,10 @@ function PictogramTile({ row }: { row: PictogramRow }) {
           style={styles.image}
           resizeMode="contain"
           onLoad={() => setStatus('ok')}
-          onError={() => setStatus('error')}
+          onError={(e) => {
+            console.log('Image load error for', uri, e?.nativeEvent || e);
+            setStatus('error');
+          }}
         />
       </View>
       <Text style={styles.tileId} numberOfLines={2}>
@@ -126,7 +134,7 @@ function CategorySection({ categoryKey, rows }: { categoryKey: string; rows: Pic
 
 export default function PictogramTestScreen({ navigation }: any) {
   const insets = useSafeAreaInsets();
-  const [lang, setLang] = useState('vi');
+  const [lang, setLang] = useState('none');
   const [grouped, setGrouped] = useState<Record<string, PictogramRow[]>>({});
   const [loading, setLoading] = useState(true);
 
