@@ -20,7 +20,6 @@ app.use(express.json({ limit: '10mb' }));
 // --- Google Gen AI (Gemini Developer API) ---
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-// --- Supabase (used to load the set of allowed pictogram IDs) ---
 const supabase = createClient(
   process.env.EXPO_PUBLIC_SUPABASE_URL,
   process.env.EXPO_PUBLIC_SUPABASE_KEY
@@ -37,7 +36,7 @@ const CATEGORIES = [
 
 // Cache the allowed pictogram IDs so we don't query on every request.
 let ALLOWED_IDS = new Set();
-// Same IDs, grouped by category — used to tell the LLM exactly what it may pick.
+// Same IDs, grouped by category, used to tell the LLM exactly what it may pick.
 let IDS_BY_CATEGORY = {};
 
 async function loadAllowedIds() {
@@ -89,6 +88,7 @@ const MEDICATION_SCHEMA = {
   }
 };
 
+//Communicates with supabase
 async function parseMedicationLabel(ocrText) {
   // Build a readable, per-category list of the ONLY IDs the model may choose from.
   const allowedList = CATEGORIES
