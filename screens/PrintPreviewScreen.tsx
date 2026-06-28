@@ -90,6 +90,7 @@ export default function PrintPreviewScreen({ navigation, route }: any) {
             language={language}
             layout={labelFormat}
             maxSlots={4}
+            showLabels={false}
           />
         </View>
 

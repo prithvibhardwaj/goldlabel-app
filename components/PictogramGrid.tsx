@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, Image, StyleSheet, ActivityIndicator, ImageSourcePropType } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 import {
   TIME_OPTIONS,
@@ -10,6 +10,7 @@ import {
   PRECAUTIONS_OPTIONS,
   PictogramOption,
 } from './PictogramData';
+import NONE_PICTOGRAMS from './pictogramAssets';
 
 const ALL_OPTIONS: PictogramOption[] = [
   ...TIME_OPTIONS,
@@ -155,6 +156,22 @@ const SCHEMA_ID_TO_FILENAME: Record<string, string> = {
   "duration_repeat_cycle": "duration.repeat_cycle.png",
 };
 
+// The `none` set on Supabase pluralises dosage units for counts >= 2,
+// whereas the language sets (and the mapping above) use the singular form.
+// Translate the app filename to the actual `none`-set filename for those.
+const NONE_FILENAME_OVERRIDES: Record<string, string> = {
+  "dosage.teaspoon_2.png": "dosage.teaspoons_2.png",
+  "dosage.teaspoon_3.png": "dosage.teaspoons_3.png",
+  "dosage.tablespoon_2.png": "dosage.tablespoons_2.png",
+  "dosage.tablespoon_3.png": "dosage.tablespoons_3.png",
+  "dosage.ear_drop_2.png": "dosage.ear_drops_2.png",
+  "dosage.ear_drop_3.png": "dosage.ear_drops_3.png",
+  "dosage.ear_drop_4.png": "dosage.ear_drops_4.png",
+  "dosage.eye_drop_2.png": "dosage.eye_drops_2.png",
+  "dosage.eye_drop_3.png": "dosage.eye_drops_3.png",
+  "dosage.eye_drop_4.png": "dosage.eye_drops_4.png",
+};
+
 export function getFriendlyLabel(id: string | null): string {
   if (!id) return '';
   const clean = id.replace(/^(how_to_take|side_effects|duration|dosage|time_of_day|precautions)_/, '');
@@ -174,8 +191,8 @@ interface ImageProps {
 }
 
 export function PictogramImage({ pictogramId, language, size }: ImageProps) {
-  const [urlList, setUrlList] = useState<string[]>([]);
-  const [currentUrlIdx, setCurrentUrlIdx] = useState(0);
+  const [sources, setSources] = useState<ImageSourcePropType[]>([]);
+  const [currentIdx, setCurrentIdx] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -187,22 +204,31 @@ export function PictogramImage({ pictogramId, language, size }: ImageProps) {
       return;
     }
 
-    // Fallback chain: selected language -> no-text pictogram -> original SVG
-    const urls: string[] = [];
+    // Fallback chain:
+    //   1. selected language (Supabase) — has the language text baked in
+    //   2. bundled no-language pictogram (offline, instant)
+    //   3. no-language pictogram (Supabase) — covers anything not bundled
+    //   4. original built-in SVG (handled via `error` state below)
+    const list: ImageSourcePropType[] = [];
     if (language && language !== 'none') {
-      urls.push(`${BASE_STORAGE_URL}/${language}/${filename}`);
+      list.push({ uri: `${BASE_STORAGE_URL}/${language}/${filename}` });
     }
-    urls.push(`${BASE_STORAGE_URL}/none/${filename}`);
+    const bundled = NONE_PICTOGRAMS[filename];
+    if (bundled) {
+      list.push(bundled);
+    }
+    const noneFilename = NONE_FILENAME_OVERRIDES[filename] || filename;
+    list.push({ uri: `${BASE_STORAGE_URL}/none/${noneFilename}` });
 
-    setUrlList(urls);
-    setCurrentUrlIdx(0);
+    setSources(list);
+    setCurrentIdx(0);
     setLoading(true);
     setError(false);
   }, [pictogramId, language]);
 
   const handleImageError = () => {
-    if (currentUrlIdx + 1 < urlList.length) {
-      setCurrentUrlIdx(prev => prev + 1);
+    if (currentIdx + 1 < sources.length) {
+      setCurrentIdx(prev => prev + 1);
     } else {
       setError(true);
       setLoading(false);
@@ -213,7 +239,7 @@ export function PictogramImage({ pictogramId, language, size }: ImageProps) {
     setLoading(false);
   };
 
-  if (error || urlList.length === 0) {
+  if (error || sources.length === 0) {
     const originalIcon = getOriginalIcon(pictogramId, size);
     if (originalIcon) {
       return (
@@ -238,7 +264,7 @@ export function PictogramImage({ pictogramId, language, size }: ImageProps) {
   return (
     <View style={{ width: size, height: size, justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
       <Image
-        source={{ uri: urlList[currentUrlIdx] }}
+        source={sources[currentIdx]}
         style={{ width: size, height: size, resizeMode: 'contain', opacity: loading ? 0 : 1 }}
         onError={handleImageError}
         onLoad={handleImageLoad}
@@ -261,9 +287,13 @@ interface GridProps {
   layout: 'portrait' | 'square' | 'landscape';
   // Maximum number of slots to show
   maxSlots?: number;
+  // Whether to render the text label under each pictogram.
+  // The printed label uses just the pictogram (the language text is baked
+  // into the image itself), so this is disabled there.
+  showLabels?: boolean;
 }
 
-export default function PictogramGrid({ pictograms, language, layout, maxSlots = 4 }: GridProps) {
+export default function PictogramGrid({ pictograms, language, layout, maxSlots = 4, showLabels = true }: GridProps) {
   // Filter out any null/undefined/empty pictograms
   const activePictograms = pictograms.filter(Boolean).slice(0, maxSlots);
 
@@ -285,9 +315,11 @@ export default function PictogramGrid({ pictograms, language, layout, maxSlots =
     return (
       <View key={`${id}-${index}`} style={[styles.gridCell, { width: cellSize }]}>
         <PictogramImage pictogramId={id} language={language} size={cellSize - 16} />
-        <Text style={styles.cellLabel} numberOfLines={1}>
-          {getFriendlyLabel(id)}
-        </Text>
+        {showLabels && (
+          <Text style={styles.cellLabel} numberOfLines={1}>
+            {getFriendlyLabel(id)}
+          </Text>
+        )}
       </View>
     );
   };
