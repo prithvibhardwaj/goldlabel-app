@@ -114,8 +114,9 @@ export default function ConfirmInformationScreen({ navigation, route }: any) {
       if (medicationData) {
         // Construct the row in the finalized schema format for Labels table
         const labelRow = {
-          raw_text: medicationData.raw_ocr_reference || '',
+          raw_ocr_reference: medicationData.raw_ocr_reference || '',
           medication_name: medicationData.medication_name || '',
+          language: medicationData.language || 'en',
           pictogram_categories: {
             language: medicationData.language || 'en',
             ...finalCategories
