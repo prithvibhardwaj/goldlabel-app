@@ -43,6 +43,14 @@
         {
           "cameraPermission": "Allow GoldLabel to access your camera to scan medication labels."
         }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
       ]
     ],
     "extra": {
