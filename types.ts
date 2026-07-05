@@ -9,18 +9,27 @@ export interface CategoryData {
 }
 
 export interface GeminiResponse {
-  raw_text: string;
+  raw_ocr_reference: string;
   medication_name: string;
+  language: string;
+  // Present when the label is served by the backend (Sara's validation layer).
+  // Optional so locally-constructed responses without a review pass still type-check.
+  confidence?: number;
+  requires_review?: boolean;
   pictogram_categories: {
-    time_of_day: CategoryData;
-    dosage: CategoryData;
-    special_instructions: CategoryData;
+    how_to_take: string | null;
+    side_effects: string | null;
+    duration: string | null;
+    dosage: string | null;
+    time_of_day: string | null;
+    precautions: string | null;
   };
 }
 
 export interface LabelRecord extends GeminiResponse {
   id: string;
   created_at: string;
+  verification_status?: 'verified' | 'rejected' | 'needs_review' | null;
 }
 
 export interface OptionSelection {
@@ -39,3 +48,4 @@ export interface MedicationRecord {
   scannedAt: Date;
   imageUrl?: string;
 }
+

@@ -89,7 +89,11 @@ export default function ProcessingScreen({ navigation, route }: any) {
       }
 
       const data: GeminiResponse = backendJson;
-      navigation.replace('ConfirmInformation', { medicationData: data });
+      navigation.replace('ConfirmInformation', {
+        medicationData: data,
+        imageUri,
+        imageBase64
+      });
     } catch (err: any) {
       Alert.alert(
         'Processing Failed',
