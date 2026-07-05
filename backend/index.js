@@ -90,6 +90,11 @@ const MEDICATION_SCHEMA = {
 
 //Communicates with supabase
 async function parseMedicationLabel(ocrText) {
+  
+  if (!ocrText) {
+    throw new Error('parseMedicationLabel: ocrText is required');
+  }
+
   // Build a readable, per-category list of the ONLY IDs the model may choose from.
   const allowedList = CATEGORIES
     .map((cat) => `  ${cat}:\n${IDS_BY_CATEGORY[cat].map((id) => `    - ${id}`).join('\n')}`)
