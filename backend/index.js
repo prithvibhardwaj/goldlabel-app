@@ -108,8 +108,9 @@ async function parseMedicationLabel(ocrText) {
     ${allowedList}
 
     Common label phrasings and their correct pictogram IDs — use these mappings:
-    - "tablet" / "capsule" / "pill" / "by mouth" / "orally" → how_to_take.swallow_whole
-    - "oral solution" / "liquid" / "syrup" / "suspension" / "elixir" / "drink" → how_to_take.with_water
+    - "tablet" / "capsule" / "pill" → dosage_form indicator only (does NOT by itself imply swallow_whole)
+    - "oral solution" / "liquid" / "syrup" / "suspension" / "elixir" → dosage_form indicator only (does NOT by itself imply with_water or any how_to_take ID)
+    - "by mouth" / "orally" / "oral" / "PO" / "drink" → route information only. Do NOT map this to any how_to_take ID by itself — see strict rules below.
     - "with food" / "with meals" → how_to_take.with_food
     - "on empty stomach" / "before meals" → how_to_take.empty_stomach
     - "with water" / "with a full glass of water" → how_to_take.with_water
@@ -123,6 +124,14 @@ async function parseMedicationLabel(ocrText) {
     - "twice a day" / "twice daily" → time_of_day.twice_daily
     - "three times a day" / "thrice daily" → time_of_day.thrice_daily
 
+    Strict rules for "how_to_take" — read carefully, these override the mappings above where they conflict:
+    - Do NOT infer "take with water" or "swallow whole" from the dosage form or route alone (e.g. "orally", "syrup", "liquid", "oral solution" do NOT by themselves justify any how_to_take ID).
+    - Only output "swallow whole" if BOTH: (1) the dosage form is tablet/capsule/caplet, AND (2) the instruction explicitly says swallow whole, do not chew, do not crush, or an equivalent phrase.
+    - Only output "with water" if the instruction explicitly says "with water" or "with a full glass of water" — do not infer this from the medicine being liquid or from the word "drink".
+    - Only output "dissolve in water" if the instruction explicitly says to dissolve, mix, or that it's effervescent.
+    - If the OCR text only indicates route or dosage form (e.g. "orally", "by mouth", "PO", "syrup", "liquid") with no explicit how-to-take instruction, output null for how_to_take and set needs_review to true.
+    - If the dosage form is unknown or not stated in the OCR text, output null for how_to_take and set needs_review to true.
+
     Instructions:
     1. The 'raw_ocr_reference' field MUST be the exact OCR text provided below, copied verbatim.
     2. Use ONLY information explicitly found in the OCR text. Do NOT invent dosage, duration, timing, or warnings.
@@ -133,7 +142,7 @@ async function parseMedicationLabel(ocrText) {
     7. Return valid JSON only — no explanation, no markdown, no code fences.
 
     OCR Text: "${ocrText}"
-  `;
+`;
 
   const response = await ai.models.generateContent({
     model: 'gemini-2.5-flash',
