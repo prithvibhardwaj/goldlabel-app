@@ -9,7 +9,12 @@ import {
   ActivityIndicator,
   Alert,
   Modal,
+  Dimensions,
 } from 'react-native';
+
+// Explicit pixel cap for the picker option list so it always scrolls, rather
+// than relying on percentage heights resolving through the Modal container.
+const PICKER_LIST_MAX_HEIGHT = Math.round(Dimensions.get('window').height * 0.6);
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path, Circle } from 'react-native-svg';
 import { supabase } from '../utils/supabase';
@@ -265,6 +270,7 @@ export default function ConfirmInformationScreen({ navigation, route }: any) {
 
       {/* Bottom Sheet Picker Modal */}
       <Modal visible={activePickerField !== null} transparent animationType="slide" onRequestClose={() => setActivePickerField(null)}>
+        <View style={styles.modalContainer}>
         <TouchableOpacity style={styles.backdrop} onPress={() => setActivePickerField(null)} activeOpacity={1} />
         <View style={[styles.sheet, { paddingBottom: 32 + insets.bottom }]}>
           <View style={styles.sheetHeader}>
@@ -304,6 +310,7 @@ export default function ConfirmInformationScreen({ navigation, route }: any) {
             ))}
           </ScrollView>
         </View>
+        </View>
       </Modal>
     </View>
   );
@@ -339,7 +346,10 @@ const styles = StyleSheet.create({
   ctaBtnDisabled: { backgroundColor: 'rgba(27,48,34,0.5)' },
   ctaText: { color: 'white', fontSize: 22, fontWeight: '700', fontFamily: 'Georgia' },
   // Sheet styles
-  backdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.3)' },
+  // Anchors the sheet to the bottom and gives it a definite-height parent so
+  // the sheet's percentage maxHeight resolves correctly.
+  modalContainer: { flex: 1, justifyContent: 'flex-end' },
+  backdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.3)' },
   sheet: { backgroundColor: '#F5F2ED', borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 24, paddingTop: 20, maxHeight: '80%' },
   // flexShrink lets the option list shrink to the sheet's bounds so it scrolls
   // internally instead of overflowing off-screen when there are many options.
@@ -347,7 +357,7 @@ const styles = StyleSheet.create({
   sheetTitle: { fontSize: 22, fontWeight: '700', color: '#1B3022', fontFamily: 'Georgia' },
   sheetClose: { width: 36, height: 36, backgroundColor: 'rgba(27,48,34,0.1)', borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
   sheetHint: { fontSize: 13, color: 'rgba(27,48,34,0.5)', marginBottom: 16 },
-  pickerScroll: { flexShrink: 1, marginVertical: 12 },
+  pickerScroll: { flexShrink: 1, marginVertical: 12, maxHeight: PICKER_LIST_MAX_HEIGHT },
   pickerOptionBtn: { paddingVertical: 16, paddingHorizontal: 20, borderRadius: 12, backgroundColor: 'white', marginBottom: 8, borderWidth: 1, borderColor: 'rgba(27,48,34,0.08)' },
   pickerOptionBtnActive: { backgroundColor: '#1B3022', borderColor: '#1B3022' },
   pickerOptionText: { fontSize: 16, fontWeight: '600', color: '#1B3022' },
