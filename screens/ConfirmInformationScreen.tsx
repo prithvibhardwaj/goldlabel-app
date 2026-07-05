@@ -274,7 +274,11 @@ export default function ConfirmInformationScreen({ navigation, route }: any) {
             </TouchableOpacity>
           </View>
           <Text style={styles.sheetHint}>Choose the correct action</Text>
-          <ScrollView style={styles.pickerScroll} showsVerticalScrollIndicator={false}>
+          <ScrollView
+            style={styles.pickerScroll}
+            contentContainerStyle={{ paddingBottom: 8 }}
+            showsVerticalScrollIndicator={false}
+          >
             {getActiveFieldOptions().map((opt) => (
               <TouchableOpacity
                 key={opt.id}
@@ -337,11 +341,13 @@ const styles = StyleSheet.create({
   // Sheet styles
   backdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.3)' },
   sheet: { backgroundColor: '#F5F2ED', borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 24, paddingTop: 20, maxHeight: '80%' },
+  // flexShrink lets the option list shrink to the sheet's bounds so it scrolls
+  // internally instead of overflowing off-screen when there are many options.
   sheetHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 },
   sheetTitle: { fontSize: 22, fontWeight: '700', color: '#1B3022', fontFamily: 'Georgia' },
   sheetClose: { width: 36, height: 36, backgroundColor: 'rgba(27,48,34,0.1)', borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
   sheetHint: { fontSize: 13, color: 'rgba(27,48,34,0.5)', marginBottom: 16 },
-  pickerScroll: { marginVertical: 12 },
+  pickerScroll: { flexShrink: 1, marginVertical: 12 },
   pickerOptionBtn: { paddingVertical: 16, paddingHorizontal: 20, borderRadius: 12, backgroundColor: 'white', marginBottom: 8, borderWidth: 1, borderColor: 'rgba(27,48,34,0.08)' },
   pickerOptionBtnActive: { backgroundColor: '#1B3022', borderColor: '#1B3022' },
   pickerOptionText: { fontSize: 16, fontWeight: '600', color: '#1B3022' },
