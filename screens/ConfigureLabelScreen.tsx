@@ -20,11 +20,10 @@ import {
   PictogramOption,
 } from '../components/PictogramData';
 
-type LabelFormat = 'portrait' | 'square' | 'landscape';
+type LabelFormat = 'portrait' | 'landscape';
 const FORMAT_OPTIONS: { id: LabelFormat; label: string; emoji: string; desc: string }[] = [
-  { id: 'portrait', label: 'Portrait (4x1)', emoji: '📱', desc: 'Vertical strip' },
-  { id: 'square', label: 'Square (2x2)', emoji: '⬛', desc: '2×2 grid' },
-  { id: 'landscape', label: 'Landscape (1x4)', emoji: '📼', desc: 'Horizontal strip' },
+  { id: 'portrait', label: 'Portrait (2×3)', emoji: '📱', desc: '2 across, 3 down' },
+  { id: 'landscape', label: 'Landscape (3×2)', emoji: '🖼️', desc: '3 across, 2 down' },
 ];
 
 const FIELDS = [
@@ -75,7 +74,7 @@ export default function ConfigureLabelScreen({ navigation, route }: any) {
   const [sideEffects, setSideEffects] = useState(side_effects);
   const [medDuration, setMedDuration] = useState(duration);
   const [medPrecautions, setMedPrecautions] = useState(precautions);
-  const [labelFormat, setLabelFormat] = useState<LabelFormat>('square');
+  const [labelFormat, setLabelFormat] = useState<LabelFormat>('portrait');
   const [openSheet, setOpenSheet] = useState<string | null>(null);
 
   const handleAssemble = () => {
@@ -186,7 +185,7 @@ export default function ConfigureLabelScreen({ navigation, route }: any) {
             pictograms={getGridItems()}
             language={language}
             layout={labelFormat}
-            maxSlots={4}
+            maxSlots={6}
             showLabels={false}
           />
         </View>

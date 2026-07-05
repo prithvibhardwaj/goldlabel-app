@@ -45,7 +45,7 @@ export default function ResultScreen({ navigation, route }: any) {
     imageUri,
     rawOcrText = '',
     language = 'en',
-    labelFormat = 'square',
+    labelFormat = 'portrait',
     pictograms = [] as string[],
   } = route.params || {};
 
@@ -138,7 +138,7 @@ export default function ResultScreen({ navigation, route }: any) {
             pictograms={pictograms}
             language={language}
             layout={labelFormat}
-            maxSlots={4}
+            maxSlots={6}
             showLabels={false}
           />
         </View>

@@ -16,7 +16,7 @@ export default function PictographViewScreen({ navigation, route }: any) {
         labelId: String(label.id),
         rawOcrText: label.raw_text,
         language,
-        labelFormat: 'square', // default view format
+        labelFormat: 'portrait', // default view format (2x3)
         pictograms,
       });
     } else {

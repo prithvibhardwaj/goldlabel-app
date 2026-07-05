@@ -166,8 +166,9 @@ interface GridProps {
   // Array of active pictogram IDs
   pictograms: string[];
   language: string;
-  layout: 'portrait' | 'square' | 'landscape';
-  // Maximum number of slots to show
+  // 'portrait' = 2 columns x 3 rows, 'landscape' = 3 columns x 2 rows.
+  layout: 'portrait' | 'landscape';
+  // Maximum number of slots to show (6 = one per pictogram category)
   maxSlots?: number;
   // Whether to render the text label under each pictogram.
   // The printed label uses just the pictogram (the language text is baked
@@ -175,11 +176,11 @@ interface GridProps {
   showLabels?: boolean;
 }
 
-export default function PictogramGrid({ pictograms, language, layout, maxSlots = 4, showLabels = true }: GridProps) {
+export default function PictogramGrid({ pictograms, language, layout, maxSlots = 6, showLabels = true }: GridProps) {
   // Filter out any null/undefined/empty pictograms
   const activePictograms = pictograms.filter(Boolean).slice(0, maxSlots);
 
-  // Pad the array up to 4 items with empty/placeholder slots if it's less
+  // Pad the array up to maxSlots with empty/placeholder slots if it's less
   const paddedPictograms = [...activePictograms];
   while (paddedPictograms.length < maxSlots) {
     paddedPictograms.push(''); // empty slot placeholder
@@ -206,55 +207,33 @@ export default function PictogramGrid({ pictograms, language, layout, maxSlots =
     );
   };
 
-  if (layout === 'portrait') {
-    // 4x1 layout: vertical list
-    return (
-      <View style={styles.portraitContainer}>
-        {paddedPictograms.map((pic, idx) => renderSlot(pic, idx, 100))}
-      </View>
-    );
-  }
-
   if (layout === 'landscape') {
-    // 1x4 layout: horizontal row
+    // 3x2 layout: 3 columns, 2 rows
     return (
-      <View style={styles.landscapeContainer}>
-        {paddedPictograms.map((pic, idx) => renderSlot(pic, idx, 76))}
+      <View style={styles.gridContainer}>
+        {[0, 3].map((start) => (
+          <View key={start} style={styles.gridRow}>
+            {paddedPictograms.slice(start, start + 3).map((pic, idx) => renderSlot(pic, start + idx, 100))}
+          </View>
+        ))}
       </View>
     );
   }
 
-  // default: square (2x2)
+  // default: portrait — 2x3 layout: 2 columns, 3 rows
   return (
-    <View style={styles.squareContainer}>
-      <View style={styles.gridRow}>
-        {paddedPictograms.slice(0, 2).map((pic, idx) => renderSlot(pic, idx, 120))}
-      </View>
-      <View style={styles.gridRow}>
-        {paddedPictograms.slice(2, 4).map((pic, idx) => renderSlot(pic, idx + 2, 120))}
-      </View>
+    <View style={styles.gridContainer}>
+      {[0, 2, 4].map((start) => (
+        <View key={start} style={styles.gridRow}>
+          {paddedPictograms.slice(start, start + 2).map((pic, idx) => renderSlot(pic, start + idx, 120))}
+        </View>
+      ))}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  portraitContainer: {
-    flexDirection: 'column',
-    width: '100%',
-    alignItems: 'center',
-    gap: 8,
-    paddingVertical: 12,
-  },
-  landscapeContainer: {
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 8,
-    paddingVertical: 12,
-  },
-  squareContainer: {
+  gridContainer: {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',

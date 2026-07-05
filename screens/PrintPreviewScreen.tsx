@@ -32,7 +32,7 @@ export default function PrintPreviewScreen({ navigation, route }: any) {
     duration = '',
     precautions = '',
     includeOnLabel = {},
-    labelFormat = 'square',
+    labelFormat = 'portrait',
     language = 'en',
     labelId = 'local',
     imageUri,
@@ -89,7 +89,7 @@ export default function PrintPreviewScreen({ navigation, route }: any) {
             pictograms={getGridItems()}
             language={language}
             layout={labelFormat}
-            maxSlots={4}
+            maxSlots={6}
             showLabels={false}
           />
         </View>
