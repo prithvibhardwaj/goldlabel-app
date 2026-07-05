@@ -46,7 +46,7 @@ const makePlaceholderVariant = (label: string) => ({
 
 export const TIME_OPTIONS: PictogramOption[] = [
   {
-    id: 'time_of_day_morning',
+    id: 'time_of_day.morning',
     label: 'Morning',
     variants: [
       {
@@ -91,7 +91,7 @@ export const TIME_OPTIONS: PictogramOption[] = [
     ],
   },
   {
-    id: 'time_of_day_noon',
+    id: 'time_of_day.noon',
     label: 'Noon',
     variants: [
       {
@@ -139,7 +139,7 @@ export const TIME_OPTIONS: PictogramOption[] = [
     ],
   },
   {
-    id: 'time_of_day_night',
+    id: 'time_of_day.night',
     label: 'Night',
     variants: [
       {
@@ -189,7 +189,7 @@ export const TIME_OPTIONS: PictogramOption[] = [
     ],
   },
   {
-    id: 'time_of_day_before_bed',
+    id: 'time_of_day.before_bed',
     label: 'Before Bed',
     variants: [
       {
@@ -235,22 +235,22 @@ export const TIME_OPTIONS: PictogramOption[] = [
       },
     ],
   },
-  { id: 'time_of_day_once_daily', label: 'Once Daily', variants: [makePlaceholderVariant('Once Daily')] },
-  { id: 'time_of_day_twice_daily', label: 'Twice Daily', variants: [makePlaceholderVariant('Twice Daily')] },
-  { id: 'time_of_day_thrice_daily', label: 'Thrice Daily', variants: [makePlaceholderVariant('Thrice Daily')] },
-  { id: 'time_of_day_upon_waking_up', label: 'Upon Waking Up', variants: [makePlaceholderVariant('Upon Waking Up')] },
-  { id: 'time_of_day_every_4_hours', label: 'Every 4 Hours', variants: [makePlaceholderVariant('Every 4 Hours')] },
-  { id: 'time_of_day_every_8_hours', label: 'Every 8 Hours', variants: [makePlaceholderVariant('Every 8 Hours')] },
-  { id: 'time_of_day_with_breakfast', label: 'With Breakfast', variants: [makePlaceholderVariant('With Breakfast')] },
-  { id: 'time_of_day_with_lunch', label: 'With Lunch', variants: [makePlaceholderVariant('With Lunch')] },
-  { id: 'time_of_day_with_dinner', label: 'With Dinner', variants: [makePlaceholderVariant('With Dinner')] },
+  { id: 'time_of_day.once_daily', label: 'Once Daily', variants: [makePlaceholderVariant('Once Daily')] },
+  { id: 'time_of_day.twice_daily', label: 'Twice Daily', variants: [makePlaceholderVariant('Twice Daily')] },
+  { id: 'time_of_day.thrice_daily', label: 'Thrice Daily', variants: [makePlaceholderVariant('Thrice Daily')] },
+  { id: 'time_of_day.upon_waking', label: 'Upon Waking Up', variants: [makePlaceholderVariant('Upon Waking Up')] },
+  { id: 'time_of_day.every_4_hours', label: 'Every 4 Hours', variants: [makePlaceholderVariant('Every 4 Hours')] },
+  { id: 'time_of_day.every_8_hours', label: 'Every 8 Hours', variants: [makePlaceholderVariant('Every 8 Hours')] },
+  { id: 'time_of_day.with_breakfast', label: 'With Breakfast', variants: [makePlaceholderVariant('With Breakfast')] },
+  { id: 'time_of_day.with_lunch', label: 'With Lunch', variants: [makePlaceholderVariant('With Lunch')] },
+  { id: 'time_of_day.with_dinner', label: 'With Dinner', variants: [makePlaceholderVariant('With Dinner')] },
 ];
 
 // ─── HOW TO TAKE ─────────────────────────────────────────────────────────────
 
 export const HOW_TO_TAKE_OPTIONS: PictogramOption[] = [
   {
-    id: 'how_to_take_take_with_food',
+    id: 'how_to_take.with_food',
     label: 'With Food',
     variants: [
       {
@@ -297,7 +297,7 @@ export const HOW_TO_TAKE_OPTIONS: PictogramOption[] = [
     ],
   },
   {
-    id: 'how_to_take_take_on_empty_stomach',
+    id: 'how_to_take.empty_stomach',
     label: 'Empty Stomach',
     variants: [
       {
@@ -346,7 +346,7 @@ export const HOW_TO_TAKE_OPTIONS: PictogramOption[] = [
     ],
   },
   {
-    id: 'how_to_take_swallow_whole',
+    id: 'how_to_take.swallow_whole',
     label: 'Swallow Whole',
     variants: [
       {
@@ -364,7 +364,7 @@ export const HOW_TO_TAKE_OPTIONS: PictogramOption[] = [
     ],
   },
   {
-    id: 'how_to_take_take_with_water',
+    id: 'how_to_take.with_water',
     label: 'With Water',
     variants: [
       {
@@ -404,16 +404,16 @@ export const HOW_TO_TAKE_OPTIONS: PictogramOption[] = [
       },
     ],
   },
-  { id: 'how_to_take_dissolve_in_water', label: 'Dissolve in Water', variants: [makePlaceholderVariant('Dissolve in Water')] },
-  { id: 'how_to_take_take_30min_before_food', label: 'Take 30 Min Before Food', variants: [makePlaceholderVariant('30 Min Before Food')] },
-  { id: 'how_to_take_take_30min_after_food', label: 'Take 30 Min After Food', variants: [makePlaceholderVariant('30 Min After Food')] },
+  { id: 'how_to_take.dissolve_in_water', label: 'Dissolve in Water', variants: [makePlaceholderVariant('Dissolve in Water')] },
+  { id: 'how_to_take.take_30_min_before_food', label: 'Take 30 Min Before Food', variants: [makePlaceholderVariant('30 Min Before Food')] },
+  { id: 'how_to_take.take_30_min_after_food', label: 'Take 30 Min After Food', variants: [makePlaceholderVariant('30 Min After Food')] },
 ];
 
 // ─── SIDE EFFECTS ─────────────────────────────────────────────────────────────
 
 export const SIDE_EFFECT_OPTIONS: PictogramOption[] = [
   {
-    id: 'side_effects_may_cause_drowsiness',
+    id: 'side_effects.drowsiness',
     label: 'May Cause Drowsiness',
     variants: [
       {
@@ -460,7 +460,7 @@ export const SIDE_EFFECT_OPTIONS: PictogramOption[] = [
     ],
   },
   {
-    id: 'side_effects_may_cause_dizziness',
+    id: 'side_effects.dizziness',
     label: 'May Cause Dizziness',
     variants: [
       {
@@ -479,7 +479,7 @@ export const SIDE_EFFECT_OPTIONS: PictogramOption[] = [
     ],
   },
   {
-    id: 'side_effects_avoid_driving',
+    id: 'side_effects.do_not_drive',
     label: 'Avoid Driving',
     variants: [
       {
@@ -495,7 +495,7 @@ export const SIDE_EFFECT_OPTIONS: PictogramOption[] = [
     ],
   },
   {
-    id: 'side_effects_may_cause_nausea',
+    id: 'side_effects.nausea',
     label: 'May Cause Nausea',
     variants: [
       {
@@ -512,112 +512,112 @@ export const SIDE_EFFECT_OPTIONS: PictogramOption[] = [
       },
     ],
   },
-  { id: 'side_effects_may_cause_headache', label: 'May Cause Headache', variants: [makePlaceholderVariant('May Cause Headache')] },
-  { id: 'side_effects_may_cause_blurred_vision', label: 'May Cause Blurred Vision', variants: [makePlaceholderVariant('May Cause Blurred Vision')] },
-  { id: 'side_effects_may_cause_tremors', label: 'May Cause Tremors', variants: [makePlaceholderVariant('May Cause Tremors')] },
-  { id: 'side_effects_may_cause_vomiting', label: 'May Cause Vomiting', variants: [makePlaceholderVariant('May Cause Vomiting')] },
-  { id: 'side_effects_may_cause_diarrhea', label: 'May Cause Diarrhea', variants: [makePlaceholderVariant('May Cause Diarrhea')] },
-  { id: 'side_effects_may_cause_constipation', label: 'May Cause Constipation', variants: [makePlaceholderVariant('May Cause Constipation')] },
-  { id: 'side_effects_may_cause_dry_mouth', label: 'May Cause Dry Mouth', variants: [makePlaceholderVariant('May Cause Dry Mouth')] },
-  { id: 'side_effects_may_cause_light_sensitivity', label: 'May Cause Light Sensitivity', variants: [makePlaceholderVariant('May Cause Light Sensitivity')] },
-  { id: 'side_effects_may_cause_allergic_reaction', label: 'May Cause Allergic Reaction', variants: [makePlaceholderVariant('May Cause Allergic Reaction')] },
-  { id: 'side_effects_may_cause_muscle_weakness', label: 'May Cause Muscle Weakness', variants: [makePlaceholderVariant('May Cause Muscle Weakness')] },
-  { id: 'side_effects_may_cause_fast_heartbeat', label: 'May Cause Fast Heartbeat', variants: [makePlaceholderVariant('May Cause Fast Heartbeat')] },
-  { id: 'side_effects_may_cause_fever', label: 'May Cause Fever', variants: [makePlaceholderVariant('May Cause Fever')] },
-  { id: 'side_effects_increased_fall_risk', label: 'Increased Fall Risk', variants: [makePlaceholderVariant('Increased Fall Risk')] },
+  { id: 'side_effects.headache', label: 'May Cause Headache', variants: [makePlaceholderVariant('May Cause Headache')] },
+  { id: 'side_effects.blurred_vision', label: 'May Cause Blurred Vision', variants: [makePlaceholderVariant('May Cause Blurred Vision')] },
+  { id: 'side_effects.tremors', label: 'May Cause Tremors', variants: [makePlaceholderVariant('May Cause Tremors')] },
+  { id: 'side_effects.vomiting', label: 'May Cause Vomiting', variants: [makePlaceholderVariant('May Cause Vomiting')] },
+  { id: 'side_effects.diarrhea', label: 'May Cause Diarrhea', variants: [makePlaceholderVariant('May Cause Diarrhea')] },
+  { id: 'side_effects.constipation', label: 'May Cause Constipation', variants: [makePlaceholderVariant('May Cause Constipation')] },
+  { id: 'side_effects.dry_mouth', label: 'May Cause Dry Mouth', variants: [makePlaceholderVariant('May Cause Dry Mouth')] },
+  { id: 'side_effects.light_sensitivity', label: 'May Cause Light Sensitivity', variants: [makePlaceholderVariant('May Cause Light Sensitivity')] },
+  { id: 'side_effects.allergic_reaction', label: 'May Cause Allergic Reaction', variants: [makePlaceholderVariant('May Cause Allergic Reaction')] },
+  { id: 'side_effects.muscle_weakness', label: 'May Cause Muscle Weakness', variants: [makePlaceholderVariant('May Cause Muscle Weakness')] },
+  { id: 'side_effects.fast_heartbeat', label: 'May Cause Fast Heartbeat', variants: [makePlaceholderVariant('May Cause Fast Heartbeat')] },
+  { id: 'side_effects.fever', label: 'May Cause Fever', variants: [makePlaceholderVariant('May Cause Fever')] },
+  { id: 'side_effects.fall_risk', label: 'Increased Fall Risk', variants: [makePlaceholderVariant('Increased Fall Risk')] },
 ];
 
 // ─── DURATION ────────────────────────────────────────────────────────────────
 
 export const DURATION_OPTIONS: PictogramOption[] = [
-  { id: 'duration_1_day', label: 'Take for 1 Day', variants: [makePlaceholderVariant('Take for 1 Day')] },
-  { id: 'duration_2_days', label: 'Take for 2 Days', variants: [makePlaceholderVariant('Take for 2 Days')] },
-  { id: 'duration_3_days', label: 'Take for 3 Days', variants: [makePlaceholderVariant('Take for 3 Days')] },
-  { id: 'duration_4_days', label: 'Take for 4 Days', variants: [makePlaceholderVariant('Take for 4 Days')] },
-  { id: 'duration_5_days', label: 'Take for 5 Days', variants: [makePlaceholderVariant('Take for 5 Days')] },
-  { id: 'duration_6_days', label: 'Take for 6 Days', variants: [makePlaceholderVariant('Take for 6 Days')] },
-  { id: 'duration_7_days', label: 'Take for 7 Days', variants: [makePlaceholderVariant('Take for 7 Days')] },
-  { id: 'duration_8_days', label: 'Take for 8 Days', variants: [makePlaceholderVariant('Take for 8 Days')] },
-  { id: 'duration_9_days', label: 'Take for 9 Days', variants: [makePlaceholderVariant('Take for 9 Days')] },
-  { id: 'duration_10_days', label: 'Take for 10 Days', variants: [makePlaceholderVariant('Take for 10 Days')] },
-  { id: 'duration_1_week', label: 'Take for 1 Week', variants: [makePlaceholderVariant('Take for 1 Week')] },
-  { id: 'duration_2_weeks', label: 'Take for 2 Weeks', variants: [makePlaceholderVariant('Take for 2 Weeks')] },
-  { id: 'duration_3_weeks', label: 'Take for 3 Weeks', variants: [makePlaceholderVariant('Take for 3 Weeks')] },
-  { id: 'duration_4_weeks', label: 'Take for 4 Weeks', variants: [makePlaceholderVariant('Take for 4 Weeks')] },
-  { id: 'duration_5_weeks', label: 'Take for 5 Weeks', variants: [makePlaceholderVariant('Take for 5 Weeks')] },
-  { id: 'duration_6_weeks', label: 'Take for 6 Weeks', variants: [makePlaceholderVariant('Take for 6 Weeks')] },
-  { id: 'duration_7_weeks', label: 'Take for 7 Weeks', variants: [makePlaceholderVariant('Take for 7 Weeks')] },
-  { id: 'duration_8_weeks', label: 'Take for 8 Weeks', variants: [makePlaceholderVariant('Take for 8 Weeks')] },
-  { id: 'duration_9_weeks', label: 'Take for 9 Weeks', variants: [makePlaceholderVariant('Take for 9 Weeks')] },
-  { id: 'duration_10_weeks', label: 'Take for 10 Weeks', variants: [makePlaceholderVariant('Take for 10 Weeks')] },
-  { id: 'duration_1_month', label: 'Take for 1 Month', variants: [makePlaceholderVariant('Take for 1 Month')] },
-  { id: 'duration_2_months', label: 'Take for 2 Months', variants: [makePlaceholderVariant('Take for 2 Months')] },
-  { id: 'duration_3_months', label: 'Take for 3 Months', variants: [makePlaceholderVariant('Take for 3 Months')] },
-  { id: 'duration_4_months', label: 'Take for 4 Months', variants: [makePlaceholderVariant('Take for 4 Months')] },
-  { id: 'duration_5_months', label: 'Take for 5 Months', variants: [makePlaceholderVariant('Take for 5 Months')] },
-  { id: 'duration_6_months', label: 'Take for 6 Months', variants: [makePlaceholderVariant('Take for 6 Months')] },
-  { id: 'duration_7_months', label: 'Take for 7 Months', variants: [makePlaceholderVariant('Take for 7 Months')] },
-  { id: 'duration_8_months', label: 'Take for 8 Months', variants: [makePlaceholderVariant('Take for 8 Months')] },
-  { id: 'duration_9_months', label: 'Take for 9 Months', variants: [makePlaceholderVariant('Take for 9 Months')] },
-  { id: 'duration_10_months', label: 'Take for 10 Months', variants: [makePlaceholderVariant('Take for 10 Months')] },
-  { id: 'duration_11_months', label: 'Take for 11 Months', variants: [makePlaceholderVariant('Take for 11 Months')] },
-  { id: 'duration_12_months', label: 'Take for 12 Months', variants: [makePlaceholderVariant('Take for 12 Months')] },
-  { id: 'duration_complete_course', label: 'Complete Course', variants: [makePlaceholderVariant('Complete Course')] },
-  { id: 'duration_stop_on_doctors_advice', label: "Stop on Doctor's Advice", variants: [makePlaceholderVariant("Stop on Doctor's Advice")] },
-  { id: 'duration_take_until_symptoms_resolve', label: 'Take Until Symptoms Resolve', variants: [makePlaceholderVariant('Until Symptoms Resolve')] },
-  { id: 'duration_repeat_cycle', label: 'Repeat Cycle', variants: [makePlaceholderVariant('Repeat Cycle')] },
+  { id: 'duration.take_1_day', label: 'Take for 1 Day', variants: [makePlaceholderVariant('Take for 1 Day')] },
+  { id: 'duration.take_2_days', label: 'Take for 2 Days', variants: [makePlaceholderVariant('Take for 2 Days')] },
+  { id: 'duration.take_3_days', label: 'Take for 3 Days', variants: [makePlaceholderVariant('Take for 3 Days')] },
+  { id: 'duration.take_4_days', label: 'Take for 4 Days', variants: [makePlaceholderVariant('Take for 4 Days')] },
+  { id: 'duration.take_5_days', label: 'Take for 5 Days', variants: [makePlaceholderVariant('Take for 5 Days')] },
+  { id: 'duration.take_6_days', label: 'Take for 6 Days', variants: [makePlaceholderVariant('Take for 6 Days')] },
+  { id: 'duration.take_7_days', label: 'Take for 7 Days', variants: [makePlaceholderVariant('Take for 7 Days')] },
+  { id: 'duration.take_8_days', label: 'Take for 8 Days', variants: [makePlaceholderVariant('Take for 8 Days')] },
+  { id: 'duration.take_9_days', label: 'Take for 9 Days', variants: [makePlaceholderVariant('Take for 9 Days')] },
+  { id: 'duration.take_10_days', label: 'Take for 10 Days', variants: [makePlaceholderVariant('Take for 10 Days')] },
+  { id: 'duration.take_1_week', label: 'Take for 1 Week', variants: [makePlaceholderVariant('Take for 1 Week')] },
+  { id: 'duration.take_2_weeks', label: 'Take for 2 Weeks', variants: [makePlaceholderVariant('Take for 2 Weeks')] },
+  { id: 'duration.take_3_weeks', label: 'Take for 3 Weeks', variants: [makePlaceholderVariant('Take for 3 Weeks')] },
+  { id: 'duration.take_4_weeks', label: 'Take for 4 Weeks', variants: [makePlaceholderVariant('Take for 4 Weeks')] },
+  { id: 'duration.take_5_weeks', label: 'Take for 5 Weeks', variants: [makePlaceholderVariant('Take for 5 Weeks')] },
+  { id: 'duration.take_6_weeks', label: 'Take for 6 Weeks', variants: [makePlaceholderVariant('Take for 6 Weeks')] },
+  { id: 'duration.take_7_weeks', label: 'Take for 7 Weeks', variants: [makePlaceholderVariant('Take for 7 Weeks')] },
+  { id: 'duration.take_8_weeks', label: 'Take for 8 Weeks', variants: [makePlaceholderVariant('Take for 8 Weeks')] },
+  { id: 'duration.take_9_weeks', label: 'Take for 9 Weeks', variants: [makePlaceholderVariant('Take for 9 Weeks')] },
+  { id: 'duration.take_10_weeks', label: 'Take for 10 Weeks', variants: [makePlaceholderVariant('Take for 10 Weeks')] },
+  { id: 'duration.take_1_month', label: 'Take for 1 Month', variants: [makePlaceholderVariant('Take for 1 Month')] },
+  { id: 'duration.take_2_months', label: 'Take for 2 Months', variants: [makePlaceholderVariant('Take for 2 Months')] },
+  { id: 'duration.take_3_months', label: 'Take for 3 Months', variants: [makePlaceholderVariant('Take for 3 Months')] },
+  { id: 'duration.take_4_months', label: 'Take for 4 Months', variants: [makePlaceholderVariant('Take for 4 Months')] },
+  { id: 'duration.take_5_months', label: 'Take for 5 Months', variants: [makePlaceholderVariant('Take for 5 Months')] },
+  { id: 'duration.take_6_months', label: 'Take for 6 Months', variants: [makePlaceholderVariant('Take for 6 Months')] },
+  { id: 'duration.take_7_months', label: 'Take for 7 Months', variants: [makePlaceholderVariant('Take for 7 Months')] },
+  { id: 'duration.take_8_months', label: 'Take for 8 Months', variants: [makePlaceholderVariant('Take for 8 Months')] },
+  { id: 'duration.take_9_months', label: 'Take for 9 Months', variants: [makePlaceholderVariant('Take for 9 Months')] },
+  { id: 'duration.take_10_months', label: 'Take for 10 Months', variants: [makePlaceholderVariant('Take for 10 Months')] },
+  { id: 'duration.take_11_months', label: 'Take for 11 Months', variants: [makePlaceholderVariant('Take for 11 Months')] },
+  { id: 'duration.take_12_months', label: 'Take for 12 Months', variants: [makePlaceholderVariant('Take for 12 Months')] },
+  { id: 'duration.complete_course', label: 'Complete Course', variants: [makePlaceholderVariant('Complete Course')] },
+  { id: 'duration.stop_only_on_doctors_advice', label: "Stop on Doctor's Advice", variants: [makePlaceholderVariant("Stop on Doctor's Advice")] },
+  { id: 'duration.until_symptoms_resolve', label: 'Take Until Symptoms Resolve', variants: [makePlaceholderVariant('Until Symptoms Resolve')] },
+  { id: 'duration.repeat_cycle', label: 'Repeat Cycle', variants: [makePlaceholderVariant('Repeat Cycle')] },
 ];
 
 // ─── DOSAGE ──────────────────────────────────────────────────────────────────
 
 export const DOSAGE_OPTIONS: PictogramOption[] = [
-  { id: 'dosage_half_tablet', label: 'Half Tablet', variants: [makePlaceholderVariant('Half Tablet')] },
-  { id: 'dosage_1_tablet', label: '1 Tablet', variants: [makePlaceholderVariant('1 Tablet')] },
-  { id: 'dosage_1_and_half_tablets', label: '1½ Tablets', variants: [makePlaceholderVariant('1.5 Tablets')] },
-  { id: 'dosage_2_tablets', label: '2 Tablets', variants: [makePlaceholderVariant('2 Tablets')] },
-  { id: 'dosage_2_and_half_tablets', label: '2½ Tablets', variants: [makePlaceholderVariant('2.5 Tablets')] },
-  { id: 'dosage_3_tablets', label: '3 Tablets', variants: [makePlaceholderVariant('3 Tablets')] },
-  { id: 'dosage_3_and_half_tablets', label: '3½ Tablets', variants: [makePlaceholderVariant('3.5 Tablets')] },
-  { id: 'dosage_4_tablets', label: '4 Tablets', variants: [makePlaceholderVariant('4 Tablets')] },
-  { id: 'dosage_4_and_half_tablets', label: '4½ Tablets', variants: [makePlaceholderVariant('4.5 Tablets')] },
-  { id: 'dosage_1_teaspoon', label: '1 Teaspoon', variants: [makePlaceholderVariant('1 Teaspoon')] },
-  { id: 'dosage_2_teaspoons', label: '2 Teaspoons', variants: [makePlaceholderVariant('2 Teaspoons')] },
-  { id: 'dosage_3_teaspoons', label: '3 Teaspoons', variants: [makePlaceholderVariant('3 Teaspoons')] },
-  { id: 'dosage_1_tablespoon', label: '1 Tablespoon', variants: [makePlaceholderVariant('1 Tablespoon')] },
-  { id: 'dosage_2_tablespoons', label: '2 Tablespoons', variants: [makePlaceholderVariant('2 Tablespoons')] },
-  { id: 'dosage_3_tablespoons', label: '3 Tablespoons', variants: [makePlaceholderVariant('3 Tablespoons')] },
-  { id: 'dosage_1_ear_drop', label: '1 Ear Drop', variants: [makePlaceholderVariant('1 Ear Drop')] },
-  { id: 'dosage_2_ear_drops', label: '2 Ear Drops', variants: [makePlaceholderVariant('2 Ear Drops')] },
-  { id: 'dosage_3_ear_drops', label: '3 Ear Drops', variants: [makePlaceholderVariant('3 Ear Drops')] },
-  { id: 'dosage_4_ear_drops', label: '4 Ear Drops', variants: [makePlaceholderVariant('4 Ear Drops')] },
-  { id: 'dosage_1_eye_drop', label: '1 Eye Drop', variants: [makePlaceholderVariant('1 Eye Drop')] },
-  { id: 'dosage_2_eye_drops', label: '2 Eye Drops', variants: [makePlaceholderVariant('2 Eye Drops')] },
-  { id: 'dosage_3_eye_drops', label: '3 Eye Drops', variants: [makePlaceholderVariant('3 Eye Drops')] },
-  { id: 'dosage_4_eye_drops', label: '4 Eye Drops', variants: [makePlaceholderVariant('4 Eye Drops')] },
-  { id: 'dosage_injection_5ml', label: '5ml Injection', variants: [makePlaceholderVariant('5ml Injection')] },
-  { id: 'dosage_injection_10ml', label: '10ml Injection', variants: [makePlaceholderVariant('10ml Injection')] },
-  { id: 'dosage_injection_15ml', label: '15ml Injection', variants: [makePlaceholderVariant('15ml Injection')] },
-  { id: 'dosage_injection_20ml', label: '20ml Injection', variants: [makePlaceholderVariant('20ml Injection')] },
+  { id: 'dosage.tablet_half', label: 'Half Tablet', variants: [makePlaceholderVariant('Half Tablet')] },
+  { id: 'dosage.tablet_1', label: '1 Tablet', variants: [makePlaceholderVariant('1 Tablet')] },
+  { id: 'dosage.tablet_1_5', label: '1½ Tablets', variants: [makePlaceholderVariant('1.5 Tablets')] },
+  { id: 'dosage.tablet_2', label: '2 Tablets', variants: [makePlaceholderVariant('2 Tablets')] },
+  { id: 'dosage.tablet_2_5', label: '2½ Tablets', variants: [makePlaceholderVariant('2.5 Tablets')] },
+  { id: 'dosage.tablet_3', label: '3 Tablets', variants: [makePlaceholderVariant('3 Tablets')] },
+  { id: 'dosage.tablet_3_5', label: '3½ Tablets', variants: [makePlaceholderVariant('3.5 Tablets')] },
+  { id: 'dosage.tablet_4', label: '4 Tablets', variants: [makePlaceholderVariant('4 Tablets')] },
+  { id: 'dosage.tablet_4_5', label: '4½ Tablets', variants: [makePlaceholderVariant('4.5 Tablets')] },
+  { id: 'dosage.teaspoon_1', label: '1 Teaspoon', variants: [makePlaceholderVariant('1 Teaspoon')] },
+  { id: 'dosage.teaspoon_2', label: '2 Teaspoons', variants: [makePlaceholderVariant('2 Teaspoons')] },
+  { id: 'dosage.teaspoon_3', label: '3 Teaspoons', variants: [makePlaceholderVariant('3 Teaspoons')] },
+  { id: 'dosage.tablespoon_1', label: '1 Tablespoon', variants: [makePlaceholderVariant('1 Tablespoon')] },
+  { id: 'dosage.tablespoon_2', label: '2 Tablespoons', variants: [makePlaceholderVariant('2 Tablespoons')] },
+  { id: 'dosage.tablespoon_3', label: '3 Tablespoons', variants: [makePlaceholderVariant('3 Tablespoons')] },
+  { id: 'dosage.ear_drop_1', label: '1 Ear Drop', variants: [makePlaceholderVariant('1 Ear Drop')] },
+  { id: 'dosage.ear_drop_2', label: '2 Ear Drops', variants: [makePlaceholderVariant('2 Ear Drops')] },
+  { id: 'dosage.ear_drop_3', label: '3 Ear Drops', variants: [makePlaceholderVariant('3 Ear Drops')] },
+  { id: 'dosage.ear_drop_4', label: '4 Ear Drops', variants: [makePlaceholderVariant('4 Ear Drops')] },
+  { id: 'dosage.eye_drop_1', label: '1 Eye Drop', variants: [makePlaceholderVariant('1 Eye Drop')] },
+  { id: 'dosage.eye_drop_2', label: '2 Eye Drops', variants: [makePlaceholderVariant('2 Eye Drops')] },
+  { id: 'dosage.eye_drop_3', label: '3 Eye Drops', variants: [makePlaceholderVariant('3 Eye Drops')] },
+  { id: 'dosage.eye_drop_4', label: '4 Eye Drops', variants: [makePlaceholderVariant('4 Eye Drops')] },
+  { id: 'dosage.ml_5', label: '5ml Injection', variants: [makePlaceholderVariant('5ml Injection')] },
+  { id: 'dosage.ml_10', label: '10ml Injection', variants: [makePlaceholderVariant('10ml Injection')] },
+  { id: 'dosage.ml_15', label: '15ml Injection', variants: [makePlaceholderVariant('15ml Injection')] },
+  { id: 'dosage.ml_20', label: '20ml Injection', variants: [makePlaceholderVariant('20ml Injection')] },
 ];
 
 // ─── PRECAUTIONS ─────────────────────────────────────────────────────────────
 
 export const PRECAUTIONS_OPTIONS: PictogramOption[] = [
-  { id: 'precautions_avoid_alcohol', label: 'Avoid Alcohol', variants: [makePlaceholderVariant('Avoid Alcohol')] },
-  { id: 'precautions_avoid_dairy', label: 'Avoid Dairy', variants: [makePlaceholderVariant('Avoid Dairy')] },
-  { id: 'precautions_avoid_grapefruit', label: 'Avoid Grapefruit', variants: [makePlaceholderVariant('Avoid Grapefruit')] },
-  { id: 'precautions_keep_refrigerated', label: 'Keep Refrigerated', variants: [makePlaceholderVariant('Keep Refrigerated')] },
-  { id: 'precautions_keep_refrigerated_do_not_freeze', label: 'Keep Refrigerated, Do Not Freeze', variants: [makePlaceholderVariant('Do Not Freeze')] },
-  { id: 'precautions_keep_away_from_light', label: 'Keep Away From Light', variants: [makePlaceholderVariant('Keep Away From Light')] },
-  { id: 'precautions_keep_away_from_children', label: 'Keep Away From Children', variants: [makePlaceholderVariant('Keep Away From Children')] },
-  { id: 'precautions_keep_away_from_pets', label: 'Keep Away From Pets', variants: [makePlaceholderVariant('Keep Away From Pets')] },
-  { id: 'precautions_dispose_properly', label: 'Dispose Properly', variants: [makePlaceholderVariant('Dispose Properly')] },
-  { id: 'precautions_do_not_share', label: 'Do Not Share', variants: [makePlaceholderVariant('Do Not Share')] },
-  { id: 'precautions_do_not_take_if_pregnant', label: 'Do Not Take if Pregnant', variants: [makePlaceholderVariant('Do Not Take if Pregnant')] },
-  { id: 'precautions_do_not_take_if_breastfeeding', label: 'Do Not Take if Breastfeeding', variants: [makePlaceholderVariant('Do Not if Breastfeeding')] },
-  { id: 'precautions_consult_doctor_before_taking', label: 'Consult Doctor Before Taking', variants: [makePlaceholderVariant('Consult Doctor')] },
-  { id: 'precautions_consult_doctor_if_symptoms_worsen', label: 'Consult Doctor if Symptoms Worsen', variants: [makePlaceholderVariant('Consult if Worsen')] },
-  { id: 'precautions_check_expiry_date', label: 'Check Expiry Date', variants: [makePlaceholderVariant('Check Expiry')] },
-  { id: 'precautions_discard_8_weeks_after_opening', label: 'Discard 8 Weeks After Opening', variants: [makePlaceholderVariant('Discard after 8 Weeks')] },
-  { id: 'precautions_store_in_cool_dry_place', label: 'Store in Cool Dry Place', variants: [makePlaceholderVariant('Store Cool & Dry')] },
+  { id: 'precautions.no_alcohol', label: 'Avoid Alcohol', variants: [makePlaceholderVariant('Avoid Alcohol')] },
+  { id: 'precautions.no_dairy', label: 'Avoid Dairy', variants: [makePlaceholderVariant('Avoid Dairy')] },
+  { id: 'precautions.no_grapefruit', label: 'Avoid Grapefruit', variants: [makePlaceholderVariant('Avoid Grapefruit')] },
+  { id: 'precautions.keep_refrigerated', label: 'Keep Refrigerated', variants: [makePlaceholderVariant('Keep Refrigerated')] },
+  { id: 'precautions.keep_refrigerated_no_freeze', label: 'Keep Refrigerated, Do Not Freeze', variants: [makePlaceholderVariant('Do Not Freeze')] },
+  { id: 'precautions.keep_away_from_light', label: 'Keep Away From Light', variants: [makePlaceholderVariant('Keep Away From Light')] },
+  { id: 'precautions.keep_away_from_children', label: 'Keep Away From Children', variants: [makePlaceholderVariant('Keep Away From Children')] },
+  { id: 'precautions.keep_away_from_pets', label: 'Keep Away From Pets', variants: [makePlaceholderVariant('Keep Away From Pets')] },
+  { id: 'precautions.dispose_properly', label: 'Dispose Properly', variants: [makePlaceholderVariant('Dispose Properly')] },
+  { id: 'precautions.do_not_share', label: 'Do Not Share', variants: [makePlaceholderVariant('Do Not Share')] },
+  { id: 'precautions.not_if_pregnant', label: 'Do Not Take if Pregnant', variants: [makePlaceholderVariant('Do Not Take if Pregnant')] },
+  { id: 'precautions.not_if_breastfeeding', label: 'Do Not Take if Breastfeeding', variants: [makePlaceholderVariant('Do Not if Breastfeeding')] },
+  { id: 'precautions.consult_doctor_before_taking', label: 'Consult Doctor Before Taking', variants: [makePlaceholderVariant('Consult Doctor')] },
+  { id: 'precautions.consult_doctor_if_symptoms_worsen', label: 'Consult Doctor if Symptoms Worsen', variants: [makePlaceholderVariant('Consult if Worsen')] },
+  { id: 'precautions.check_expiry_date', label: 'Check Expiry Date', variants: [makePlaceholderVariant('Check Expiry')] },
+  { id: 'precautions.discard_8_weeks_after_opening', label: 'Discard 8 Weeks After Opening', variants: [makePlaceholderVariant('Discard after 8 Weeks')] },
+  { id: 'precautions.store_cool_dry_place', label: 'Store in Cool Dry Place', variants: [makePlaceholderVariant('Store Cool & Dry')] },
 ];

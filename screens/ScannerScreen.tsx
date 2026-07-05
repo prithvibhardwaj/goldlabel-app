@@ -34,6 +34,7 @@ export default function ScannerScreen({ navigation }: any) {
   const cameraRef = useRef<CameraView>(null);
   const [permission, requestPermission] = useCameraPermissions();
   const [cameraReady, setCameraReady] = useState(false);
+  const [cameraError, setCameraError] = useState(false);
   const [flashEnabled, setFlashEnabled] = useState(false);
   const [scanning, setScanning] = useState(false);
   const scanLineAnim = useRef(new Animated.Value(-80)).current;
@@ -125,13 +126,16 @@ export default function ScannerScreen({ navigation }: any) {
   return (
     <View style={styles.container}>
       {/* Live camera background */}
-      {permission?.granted ? (
+      {permission?.granted && !cameraError ? (
         <CameraView
           ref={cameraRef}
           style={StyleSheet.absoluteFill}
           facing="back"
           enableTorch={flashEnabled}
           onCameraReady={() => setCameraReady(true)}
+          // Fires when expo-camera can't initialise — e.g. an emulator or a
+          // device with no usable camera. Fall back to gallery import.
+          onMountError={() => setCameraError(true)}
         />
       ) : (
         <View style={styles.cameraBg} />
@@ -180,16 +184,22 @@ export default function ScannerScreen({ navigation }: any) {
         </View>
 
         <Text style={styles.instruction}>
-          {showPermissionPrompt
+          {cameraError
+            ? 'Camera unavailable on this device. Pick a photo from your gallery instead.'
+            : showPermissionPrompt
             ? 'Camera access is off. Enable it in settings to scan.'
             : 'Align medicine label within frame'}
         </Text>
 
-        {showPermissionPrompt && (
+        {cameraError ? (
+          <TouchableOpacity onPress={handlePickFromGallery} style={styles.settingsBtn} activeOpacity={0.8}>
+            <Text style={styles.settingsBtnText}>Pick from Gallery</Text>
+          </TouchableOpacity>
+        ) : showPermissionPrompt ? (
           <TouchableOpacity onPress={() => Linking.openSettings()} style={styles.settingsBtn} activeOpacity={0.8}>
             <Text style={styles.settingsBtnText}>Open Settings</Text>
           </TouchableOpacity>
-        )}
+        ) : null}
       </View>
 
       {/* Shutter button */}

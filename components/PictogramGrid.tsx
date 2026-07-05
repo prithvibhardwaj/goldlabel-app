@@ -27,138 +27,18 @@ function getOriginalIcon(pictogramId: string, size: number): React.ReactElement 
   return option.variants[0].icon(size);
 }
 
-const BASE_STORAGE_URL = 'https://rnqsgsxgwadtgmqowrvq.supabase.co/storage/v1/object/public/pictograms/v1';
+const BASE_STORAGE_URL = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/pictograms/v1`;
 
-// Mappings from schema ID to Supabase storage filename
-const SCHEMA_ID_TO_FILENAME: Record<string, string> = {
-  // how_to_take
-  "how_to_take_dissolve_in_water": "how_to_take.dissolve_in_water_v1.png",
-  "how_to_take_swallow_whole": "how_to_take.swallow_whole.png",
-  "how_to_take_take_30min_before_food": "how_to_take.take_30_min_before_food.png",
-  "how_to_take_take_30min_after_food": "how_to_take.take_30_min_after_food.png",
-  "how_to_take_take_on_empty_stomach": "how_to_take.empty_stomach.png",
-  "how_to_take_take_with_food": "how_to_take.with_food.png",
-  "how_to_take_take_with_water": "how_to_take.with_water.png",
-  // side_effects
-  "side_effects_may_cause_drowsiness": "side_effects.drowsiness.png",
-  "side_effects_may_cause_dizziness": "side_effects.dizziness.png",
-  "side_effects_avoid_driving": "side_effects.do_not_drive.png",
-  "side_effects_may_cause_headache": "side_effects.headache.png",
-  "side_effects_may_cause_blurred_vision": "side_effects.blurred_vision.png",
-  "side_effects_may_cause_tremors": "side_effects.tremors.png",
-  "side_effects_may_cause_nausea": "side_effects.nausea.png",
-  "side_effects_may_cause_vomiting": "side_effects.vomiting.png",
-  "side_effects_may_cause_diarrhea": "side_effects.diarrhea.png",
-  "side_effects_may_cause_constipation": "side_effects.constipation.png",
-  "side_effects_may_cause_dry_mouth": "side_effects.dry_mouth.png",
-  "side_effects_may_cause_light_sensitivity": "side_effects.light_sensitivity.png",
-  "side_effects_may_cause_allergic_reaction": "side_effects.allergic_reaction.png",
-  "side_effects_may_cause_muscle_weakness": "side_effects.muscle_weakness.png",
-  "side_effects_may_cause_fast_heartbeat": "side_effects.fast_heartbeat.png",
-  "side_effects_may_cause_fever": "side_effects.fever.png",
-  "side_effects_increased_fall_risk": "side_effects.fall_risk.png",
-  // time_of_day
-  "time_of_day_once_daily": "time_of_day.once_daily.png",
-  "time_of_day_twice_daily": "time_of_day.twice_daily.png",
-  "time_of_day_thrice_daily": "time_of_day.thrice_daily.png",
-  "time_of_day_morning": "time_of_day.morning.png",
-  "time_of_day_noon": "time_of_day.noon.png",
-  "time_of_day_night": "time_of_day.night.png",
-  "time_of_day_upon_waking_up": "time_of_day.upon_waking.png",
-  "time_of_day_before_bed": "time_of_day.before_bed.png",
-  "time_of_day_every_4_hours": "time_of_day.every_4_hours.png",
-  "time_of_day_every_8_hours": "time_of_day.every_8_hours.png",
-  "time_of_day_with_breakfast": "time_of_day.with_breakfast.png",
-  "time_of_day_with_lunch": "time_of_day.with_lunch.png",
-  "time_of_day_with_dinner": "time_of_day.with_dinner.png",
-  // precautions
-  "precautions_avoid_alcohol": "precautions.no_alcohol.png",
-  "precautions_avoid_dairy": "precautions.no_dairy.png",
-  "precautions_avoid_grapefruit": "precautions.no_grapefruit.png",
-  "precautions_keep_refrigerated": "precautions.keep_refrigerated.png",
-  "precautions_keep_refrigerated_do_not_freeze": "precautions.keep_refrigerated_no_freeze.png",
-  "precautions_keep_away_from_light": "precautions.keep_away_from_light.png",
-  "precautions_keep_away_from_children": "precautions.keep_away_from_children.png",
-  "precautions_keep_away_from_pets": "precautions.keep_away_from_pets.png",
-  "precautions_dispose_properly": "precautions.dispose_properly.png",
-  "precautions_do_not_share": "precautions.do_not_share.png",
-  "precautions_do_not_take_if_pregnant": "precautions.not_if_pregnant.png",
-  "precautions_do_not_take_if_breastfeeding": "precautions.not_if_breastfeeding.png",
-  "precautions_consult_doctor_before_taking": "precautions.consult_doctor_before_taking.png",
-  "precautions_consult_doctor_if_symptoms_worsen": "precautions.consult_doctor_if_symptoms_worsen.png",
-  "precautions_check_expiry_date": "precautions.check_expiry_date.png",
-  "precautions_discard_8_weeks_after_opening": "precautions.discard_8_weeks_after_opening.png",
-  "precautions_store_in_cool_dry_place": "precautions.store_cool_dry_place.png",
-  // dosage
-  "dosage_half_tablet": "dosage.tablet_half.png",
-  "dosage_1_tablet": "dosage.tablet_1.png",
-  "dosage_1_and_half_tablets": "dosage.tablet_1_5.png",
-  "dosage_2_tablets": "dosage.tablet_2.png",
-  "dosage_2_and_half_tablets": "dosage.tablet_2_5.png",
-  "dosage_3_tablets": "dosage.tablet_3.png",
-  "dosage_3_and_half_tablets": "dosage.tablet_3_5.png",
-  "dosage_4_tablets": "dosage.tablet_4.png",
-  "dosage_4_and_half_tablets": "dosage.tablet_4_5.png",
-  "dosage_1_teaspoon": "dosage.teaspoon_1.png",
-  "dosage_2_teaspoons": "dosage.teaspoon_2.png",
-  "dosage_3_teaspoons": "dosage.teaspoon_3.png",
-  "dosage_1_tablespoon": "dosage.tablespoon_1.png",
-  "dosage_2_tablespoons": "dosage.tablespoon_2.png",
-  "dosage_3_tablespoons": "dosage.tablespoon_3.png",
-  "dosage_1_ear_drop": "dosage.ear_drop_1.png",
-  "dosage_2_ear_drops": "dosage.ear_drop_2.png",
-  "dosage_3_ear_drops": "dosage.ear_drop_3.png",
-  "dosage_4_ear_drops": "dosage.ear_drop_4.png",
-  "dosage_1_eye_drop": "dosage.eye_drop_1.png",
-  "dosage_2_eye_drops": "dosage.eye_drop_2.png",
-  "dosage_3_eye_drops": "dosage.eye_drop_3.png",
-  "dosage_4_eye_drops": "dosage.eye_drop_4.png",
-  "dosage_injection_5ml": "dosage.ml_5.png",
-  "dosage_injection_10ml": "dosage.ml_10.png",
-  "dosage_injection_15ml": "dosage.ml_15.png",
-  "dosage_injection_20ml": "dosage.ml_20.png",
-  // duration
-  "duration_1_day": "duration.take_1_day.png",
-  "duration_2_days": "duration.take_2_days.png",
-  "duration_3_days": "duration.take_3_days.png",
-  "duration_4_days": "duration.take_4_days.png",
-  "duration_5_days": "duration.take_5_days.png",
-  "duration_6_days": "duration.take_6_days.png",
-  "duration_7_days": "duration.take_7_days.png",
-  "duration_8_days": "duration.take_8_days.png",
-  "duration_9_days": "duration.take_9_days.png",
-  "duration_10_days": "duration.take_10_days.png",
-  "duration_1_week": "duration.take_1_week.png",
-  "duration_2_weeks": "duration.take_2_weeks.png",
-  "duration_3_weeks": "duration.take_3_weeks.png",
-  "duration_4_weeks": "duration.take_4_weeks.png",
-  "duration_5_weeks": "duration.take_5_weeks.png",
-  "duration_6_weeks": "duration.take_6_weeks.png",
-  "duration_7_weeks": "duration.take_7_weeks.png",
-  "duration_8_weeks": "duration.take_8_weeks.png",
-  "duration_9_weeks": "duration.take_9_weeks.png",
-  "duration_10_weeks": "duration.take_10_weeks.png",
-  "duration_1_month": "duration.take_1_month.png",
-  "duration_2_months": "duration.take_2_months.png",
-  "duration_3_months": "duration.take_3_months.png",
-  "duration_4_months": "duration.take_4_months.png",
-  "duration_5_months": "duration.take_5_months.png",
-  "duration_6_months": "duration.take_6_months.png",
-  "duration_7_months": "duration.take_7_months.png",
-  "duration_8_months": "duration.take_8_months.png",
-  "duration_9_months": "duration.take_9_months.png",
-  "duration_10_months": "duration.take_10_months.png",
-  "duration_11_months": "duration.take_11_months.png",
-  "duration_12_months": "duration.take_12_months.png",
-  "duration_complete_course": "duration.complete_course.png",
-  "duration_stop_on_doctors_advice": "duration.stop_only_on_doctors_advice.png",
-  "duration_take_until_symptoms_resolve": "duration.until_symptoms_resolve.png",
-  "duration_repeat_cycle": "duration.repeat_cycle.png",
+// Pictogram ids are dot-notation and normally map straight to the stored
+// filename as `${pictogram_id}.png`. The only exceptions are pictograms whose
+// art file carries a variant suffix.
+const FILENAME_OVERRIDES: Record<string, string> = {
+  'how_to_take.dissolve_in_water': 'how_to_take.dissolve_in_water_v1.png',
 };
 
 // The `none` set on Supabase pluralises dosage units for counts >= 2,
-// whereas the language sets (and the mapping above) use the singular form.
-// Translate the app filename to the actual `none`-set filename for those.
+// whereas the language sets (and the pictogram ids) use the singular form.
+// Translate the derived filename to the actual `none`-set filename for those.
 const NONE_FILENAME_OVERRIDES: Record<string, string> = {
   "dosage.teaspoon_2.png": "dosage.teaspoons_2.png",
   "dosage.teaspoon_3.png": "dosage.teaspoons_3.png",
@@ -174,13 +54,14 @@ const NONE_FILENAME_OVERRIDES: Record<string, string> = {
 
 export function getFriendlyLabel(id: string | null): string {
   if (!id) return '';
-  const clean = id.replace(/^(how_to_take|side_effects|duration|dosage|time_of_day|precautions)_/, '');
+  const option = ALL_OPTIONS.find((o) => o.id === id);
+  if (option) return option.label;
+  // Fallback for ids without a bundled option: format the part after the
+  // category prefix (e.g. "dosage.tablet_1" -> "Tablet 1").
+  const clean = id.includes('.') ? id.slice(id.indexOf('.') + 1) : id;
   return clean
     .split('_')
-    .map(word => {
-      if (word === '30min') return '30 min';
-      return word.charAt(0).toUpperCase() + word.slice(1);
-    })
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 }
 
@@ -197,12 +78,13 @@ export function PictogramImage({ pictogramId, language, size }: ImageProps) {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    const filename = SCHEMA_ID_TO_FILENAME[pictogramId];
-    if (!filename) {
+    if (!pictogramId) {
       setError(true);
       setLoading(false);
       return;
     }
+    // Pictogram ids are dot-notation and map directly to the stored filename.
+    const filename = FILENAME_OVERRIDES[pictogramId] || `${pictogramId}.png`;
 
     // Fallback chain:
     //   1. selected language (Supabase) — has the language text baked in

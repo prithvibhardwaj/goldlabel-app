@@ -9,3 +9,6 @@ ios/
 android/
 .idea/
 .DS_Store
+
+# Local-only Claude instructions — kept on disk, never committed
+CLAUDE.md

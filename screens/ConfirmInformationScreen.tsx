@@ -112,15 +112,14 @@ export default function ConfirmInformationScreen({ navigation, route }: any) {
       });
 
       if (medicationData) {
-        // Construct the row in the finalized schema format for Labels table
+        // Construct the row in the finalized schema format for the Labels table.
+        // `language` is a top-level column (validated by the backend); the
+        // pictogram_categories object holds exactly the 6 category keys.
         const labelRow = {
           raw_ocr_reference: medicationData.raw_ocr_reference || '',
           medication_name: medicationData.medication_name || '',
-          language: medicationData.language || 'en',
-          pictogram_categories: {
-            language: medicationData.language || 'en',
-            ...finalCategories
-          }
+          language: medicationData.language || 'none',
+          pictogram_categories: finalCategories,
         };
 
         const { data, error } = await supabase
@@ -187,6 +186,11 @@ export default function ConfirmInformationScreen({ navigation, route }: any) {
         </View>
         {medicationData && (
           <Text style={styles.medName}>{medicationData.medication_name}</Text>
+        )}
+        {medicationData?.requires_review && (
+          <View style={styles.reviewBanner}>
+            <Text style={styles.reviewBannerText}>⚠️ Low confidence — please review each field carefully</Text>
+          </View>
         )}
         <Text style={styles.subtitle}>
           OCR has read your label — tap <Text style={styles.subtitleBold}>Edit</Text> on any field to correct a mistake
@@ -308,6 +312,8 @@ const styles = StyleSheet.create({
   backBtn: { width: 44, height: 44, backgroundColor: 'rgba(255,255,255,0.8)', borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
   title: { fontSize: 28, fontWeight: '700', color: '#1B3022', fontFamily: 'Georgia', flex: 1 },
   medName: { fontSize: 20, fontWeight: '700', color: '#D37B5C', marginLeft: 60, marginBottom: 2 },
+  reviewBanner: { backgroundColor: '#FFF3CD', borderRadius: 10, paddingHorizontal: 16, paddingVertical: 8, marginLeft: 60, marginBottom: 8 },
+  reviewBannerText: { fontSize: 13, color: '#856404', fontWeight: '600' },
   subtitle: { fontSize: 15, color: 'rgba(27,48,34,0.55)', marginLeft: 60 },
   subtitleBold: { fontWeight: '600', color: 'rgba(27,48,34,0.7)' },
   scroll: { flex: 1, paddingHorizontal: 24 },

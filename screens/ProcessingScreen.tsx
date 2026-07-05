@@ -4,28 +4,6 @@ import { GeminiResponse } from '../types';
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
-const MEDICATION_SCHEMA = {
-  type: 'object',
-  required: ['raw_ocr_reference', 'medication_name', 'language', 'pictogram_categories'],
-  properties: {
-    raw_ocr_reference: { type: 'string' },
-    medication_name: { type: 'string' },
-    language: { type: 'string', enum: ['none', 'en', 'bn', 'hi', 'kn', 'ml', 'te', 'my', 'th', 'vi', 'zh', 'ms', 'ta'] },
-    pictogram_categories: {
-      type: 'object',
-      required: ['how_to_take', 'side_effects', 'duration', 'dosage', 'time_of_day', 'precautions'],
-      properties: {
-        how_to_take: { type: ['string', 'null'] },
-        side_effects: { type: ['string', 'null'] },
-        duration: { type: ['string', 'null'] },
-        dosage: { type: ['string', 'null'] },
-        time_of_day: { type: ['string', 'null'] },
-        precautions: { type: ['string', 'null'] }
-      }
-    }
-  }
-};
-
 function SparklesIcon() {
   return (
     <Text style={{ fontSize: 56, textAlign: 'center' }}>✨</Text>

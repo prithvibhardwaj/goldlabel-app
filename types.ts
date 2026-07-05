@@ -12,6 +12,10 @@ export interface GeminiResponse {
   raw_ocr_reference: string;
   medication_name: string;
   language: string;
+  // Present when the label is served by the backend (Sara's validation layer).
+  // Optional so locally-constructed responses without a review pass still type-check.
+  confidence?: number;
+  requires_review?: boolean;
   pictogram_categories: {
     how_to_take: string | null;
     side_effects: string | null;
