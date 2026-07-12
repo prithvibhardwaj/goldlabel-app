@@ -244,6 +244,7 @@ function validateLlmOutput(rawText) {
 app.post('/api/ocr/extract', upload.single('file'), async (req, res) => {
   try {
     const apiKey = process.env.GOOGLE_CLOUD_VISION_API_KEY;
+    console.time('total-request');
     let imageBase64 = req.body?.imageBase64;
 
     if (!imageBase64 && req.file) {
@@ -251,10 +252,12 @@ app.post('/api/ocr/extract', upload.single('file'), async (req, res) => {
     }
 
     if (!imageBase64) {
+      console.timeEnd('total-request');
       return res.status(400).json({ error: 'No image provided.' });
     }
 
     // 1. Get raw text from Google Vision
+    console.time('vision-call');
     const visionResponse = await fetch(
       `https://vision.googleapis.com/v1/images:annotate?key=${apiKey}`,
       {
@@ -270,23 +273,28 @@ app.post('/api/ocr/extract', upload.single('file'), async (req, res) => {
     );
 
     const visionJson = await visionResponse.json();
+    console.timeEnd('vision-call');
 
     if (!visionResponse.ok || visionJson.error) {
       const errMsg = visionJson.error?.message || 'Vision API request failed.';
       console.error('Vision API error:', visionJson.error);
+      console.timeEnd('total-request');
       return res.status(502).json({ error: `Vision API error: ${errMsg}` });
     }
 
     const extractedText = visionJson.responses?.[0]?.fullTextAnnotation?.text || '';
 
     if (!extractedText) {
+      console.timeEnd('total-request');
       return res.status(422).json({ error: 'Could not detect any text in the image.' });
     }
 
     // 2. Parse text into structured schema using Gemini — validate, retry once if needed
     let validation;
     for (let attempt = 1; attempt <= 2; attempt++) {
+      console.time(`gemini-call-attempt-${attempt}`);
       const rawLlm = await parseMedicationLabel(extractedText);
+      console.timeEnd(`gemini-call-attempt-${attempt}`);
       console.log('LLM raw response:', rawLlm); // ADD THIS LINE
       validation = validateLlmOutput(rawLlm);
       if (validation.valid) break;
@@ -294,6 +302,7 @@ app.post('/api/ocr/extract', upload.single('file'), async (req, res) => {
     }
 
     if (!validation.valid) {
+      console.timeEnd('total-request');
       return res.status(422).json({
         error: 'LLM output failed validation after retry.',
         details: validation.errors,
@@ -301,10 +310,12 @@ app.post('/api/ocr/extract', upload.single('file'), async (req, res) => {
     }
 
     // 3. Return validated structured data to the mobile app
+    console.timeEnd('total-request');
     return res.json(validation.data);
 
   } catch (err) {
     console.error('Processing error:', err);
+    console.timeEnd('total-request');
     return res.status(500).json({ error: 'Internal server error during processing.' });
   }
 });
