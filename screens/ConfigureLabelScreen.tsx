@@ -180,7 +180,6 @@ export default function ConfigureLabelScreen({ navigation, route }: any) {
       >
         {/* Live label Grid */}
         <View style={styles.gridCard}>
-          <Text style={styles.gridCardTitle}>LIVE LABEL STICKER</Text>
           <PictogramGrid
             pictograms={getGridItems()}
             language={language}

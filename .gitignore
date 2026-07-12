@@ -9,6 +9,7 @@ ios/
 android/
 .idea/
 .DS_Store
+backend/service_account_auth.json
 
 # Local-only Claude instructions — kept on disk, never committed
 CLAUDE.md
