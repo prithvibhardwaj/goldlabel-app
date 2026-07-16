@@ -3,7 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import Svg, { Path, Circle } from 'react-native-svg';
-import { supabase } from '../utils/supabase';
+import { getHistory } from '../utils/localHistory';
 import { LabelRecord } from '../types';
 import { format, formatDistanceToNow } from 'date-fns';
 
@@ -59,12 +59,9 @@ export default function HistoryScreen({ navigation }: any) {
   const fetchLabels = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('Labels')
-        .select('*')
-        .order('created_at', { ascending: false });
-      if (error) throw error;
-      setLabels(data || []);
+      // Personal history lives only on this device (encrypted at rest).
+      const data = await getHistory();
+      setLabels(data);
     } catch {
       setLabels([]);
     } finally {

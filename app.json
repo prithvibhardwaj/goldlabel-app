@@ -25,8 +25,7 @@
         "INTERNET",
         "ACCESS_NETWORK_STATE",
         "CAMERA",
-        "READ_MEDIA_IMAGES",
-        "READ_EXTERNAL_STORAGE"
+        "READ_MEDIA_IMAGES"
       ]
     },
     "plugins": [
@@ -51,7 +50,8 @@
             "usesCleartextTraffic": true
           }
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "extra": {
       "eas": {
