@@ -158,6 +158,11 @@ async function parseMedicationLabel(ocrText) {
     For each category, you may ONLY choose from these exact pictogram IDs (or null if not mentioned):
     ${allowedList}
 
+    IMPORTANT - ID FORMAT: every ID above already includes its category prefix, in the exact
+    form "category.action" (e.g. "how_to_take.with_food", "dosage.tablet_1"). Copy the ID
+    exactly as shown, including the prefix before the dot. Do NOT strip the prefix and return
+    just the action part (e.g. "with_food" alone is WRONG — it must be "how_to_take.with_food").
+
     Common label phrasings and their correct pictogram IDs — use these mappings:
     - "tablet" / "capsule" / "pill" → dosage_form indicator only (does NOT by itself imply swallow_whole)
     - "oral solution" / "liquid" / "syrup" / "suspension" / "elixir" → dosage_form indicator only (does NOT by itself imply with_water or any how_to_take ID)
@@ -187,7 +192,7 @@ async function parseMedicationLabel(ocrText) {
     1. The 'raw_ocr_reference' field MUST be the exact OCR text provided below, copied verbatim.
     2. Use ONLY information explicitly found in the OCR text. Do NOT invent dosage, duration, timing, or warnings.
     3. For each pictogram category, pick ONE pictogram ID from the allowed list above that best matches the label, or null if not mentioned.
-    4. You MUST use an ID exactly as written in the allowed list. Do NOT invent, modify, combine, or guess new IDs. If nothing fits, use null.
+    4. You MUST use an ID exactly as written in the allowed list, INCLUDING the "category." prefix (e.g. "how_to_take.with_food", NOT just "with_food"). Do NOT invent, modify, combine, strip prefixes from, or guess new IDs. If nothing fits, use null.
     5. Set requires_review to true if you are uncertain about any field.
     6. Set confidence to a number between 0 and 1 based on how clearly the label states the information.
     7. Return valid JSON only — no explanation, no markdown, no code fences.
@@ -198,7 +203,10 @@ async function parseMedicationLabel(ocrText) {
   const response = await ai.models.generateContent({
     model: 'gemini-2.5-flash',
     contents: prompt,
-    config: { responseMimeType: 'application/json' },
+    config: {
+      responseMimeType: 'application/json',
+      thinkingConfig: { thinkingBudget: 0 }, // no reasoning needed for structured extraction - saves seconds
+    },
   });
 
   return response.text;
@@ -299,6 +307,7 @@ function sanitizeText(value, maxLen) {
 app.post('/api/ocr/extract', ocrLimiter, upload.single('file'), async (req, res) => {
   try {
     const apiKey = process.env.GOOGLE_CLOUD_VISION_API_KEY;
+    console.time('total-request');
     let imageBase64 = req.body?.imageBase64;
 
     if (!imageBase64 && req.file) {
@@ -306,6 +315,7 @@ app.post('/api/ocr/extract', ocrLimiter, upload.single('file'), async (req, res)
     }
 
     if (!imageBase64) {
+      console.timeEnd('total-request');
       return res.status(400).json({ error: 'No image provided.' });
     }
 
@@ -324,6 +334,7 @@ app.post('/api/ocr/extract', ocrLimiter, upload.single('file'), async (req, res)
     }
 
     // 1. Get raw text from Google Vision
+    console.time('vision-call');
     const visionResponse = await fetch(
       `https://vision.googleapis.com/v1/images:annotate?key=${apiKey}`,
       {
@@ -339,29 +350,36 @@ app.post('/api/ocr/extract', ocrLimiter, upload.single('file'), async (req, res)
     );
 
     const visionJson = await visionResponse.json();
+    console.timeEnd('vision-call');
 
     if (!visionResponse.ok || visionJson.error) {
       const errMsg = visionJson.error?.message || 'Vision API request failed.';
       console.error('Vision API error:', visionJson.error);
+      console.timeEnd('total-request');
       return res.status(502).json({ error: `Vision API error: ${errMsg}` });
     }
 
     const extractedText = visionJson.responses?.[0]?.fullTextAnnotation?.text || '';
 
     if (!extractedText) {
+      console.timeEnd('total-request');
       return res.status(422).json({ error: 'Could not detect any text in the image.' });
     }
 
     // 2. Parse text into structured schema using Gemini — validate, retry once if needed
     let validation;
     for (let attempt = 1; attempt <= 2; attempt++) {
+      console.time(`gemini-call-attempt-${attempt}`);
       const rawLlm = await parseMedicationLabel(extractedText);
+      console.timeEnd(`gemini-call-attempt-${attempt}`);
+      // NOTE: do not log rawLlm — it contains parsed medication data (PII/PHI).
       validation = validateLlmOutput(rawLlm);
       if (validation.valid) break;
       console.warn(`LLM validation failed (attempt ${attempt})`);
     }
 
     if (!validation.valid) {
+      console.timeEnd('total-request');
       return res.status(422).json({
         error: 'LLM output failed validation after retry.',
         details: validation.errors,
@@ -374,10 +392,12 @@ app.post('/api/ocr/extract', ocrLimiter, upload.single('file'), async (req, res)
     validation.data.raw_ocr_reference = sanitizeText(validation.data.raw_ocr_reference, 4000);
 
     // 3. Return validated structured data to the mobile app
+    console.timeEnd('total-request');
     return res.json(validation.data);
 
   } catch (err) {
     console.error('Processing error:', err);
+    console.timeEnd('total-request');
     return res.status(500).json({ error: 'Internal server error during processing.' });
   }
 });
