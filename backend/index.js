@@ -17,6 +17,14 @@ const upload = multer({
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
+// Health check
+app.get('/', (req, res) => {
+  res.status(200).json({
+    service: 'goldlabel-backend',
+    status: 'ok',
+  });
+});
+
 // --- Google Gen AI (Gemini Developer API) ---
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -278,7 +286,6 @@ app.post('/api/ocr/extract', upload.single('file'), async (req, res) => {
     if (!visionResponse.ok || visionJson.error) {
       const errMsg = visionJson.error?.message || 'Vision API request failed.';
       console.error('Vision API error:', visionJson.error);
-      console.timeEnd('total-request');
       return res.status(502).json({ error: `Vision API error: ${errMsg}` });
     }
 
