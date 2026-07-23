@@ -13,7 +13,3 @@ backend/service_account_auth.json
 
 # Local-only Claude instructions — kept on disk, never committed
 CLAUDE.md
-
-# Local-only internal deployment docs — kept on disk, never committed
-PRE_DEPLOYMENT.md
-backend/DEPLOY.md
