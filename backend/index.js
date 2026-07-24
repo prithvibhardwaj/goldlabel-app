@@ -65,7 +65,7 @@ const contributeLimiter = rateLimit({ windowMs: 10 * 60 * 1000, max: 60 });
 
 // Health check — lets the host (Railway) and a browser confirm the service is up.
 app.get('/', (req, res) => {
-  res.json({ service: 'goldlabel-backend', status: 'ok' });
+  res.status(200).json({ service: 'goldlabel-backend', status: 'ok' });
 });
 
 // --- Google Gen AI (Gemini Developer API) ---
@@ -355,7 +355,6 @@ app.post('/api/ocr/extract', ocrLimiter, upload.single('file'), async (req, res)
     if (!visionResponse.ok || visionJson.error) {
       const errMsg = visionJson.error?.message || 'Vision API request failed.';
       console.error('Vision API error:', visionJson.error);
-      console.timeEnd('total-request');
       return res.status(502).json({ error: `Vision API error: ${errMsg}` });
     }
 
