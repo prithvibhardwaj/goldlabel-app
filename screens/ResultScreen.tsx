@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
-import { supabase } from '../utils/supabase';
+import { updateRecord } from '../utils/localHistory';
 import PictogramGrid, { getFriendlyLabel } from '../components/PictogramGrid';
 
 const LANG_MAP: Record<string, string> = {
@@ -56,27 +56,8 @@ export default function ResultScreen({ navigation, route }: any) {
     setLoadingStatus(status);
     try {
       if (labelId && labelId !== 'local') {
-        // Fetch the current record first to preserve fields
-        const { data: currentRecord, error: getError } = await supabase
-          .from('Labels')
-          .select('*')
-          .eq('id', labelId)
-          .single();
-
-        if (getError) throw getError;
-
-        const currentCats = currentRecord.pictogram_categories || {};
-        const updatedCats = {
-          ...currentCats,
-          verification_status: status,
-        };
-
-        const { error: updateError } = await supabase
-          .from('Labels')
-          .update({ pictogram_categories: updatedCats })
-          .eq('id', labelId);
-
-        if (updateError) throw updateError;
+        // Update the verification status on the local (encrypted) record.
+        await updateRecord(labelId, { verification_status: status });
       }
 
       Alert.alert(

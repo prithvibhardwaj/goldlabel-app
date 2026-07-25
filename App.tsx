@@ -1,3 +1,7 @@
+// MUST be first: polyfills crypto.getRandomValues (used by crypto-js) before
+// any screen/util that imports crypto-js is loaded.
+import './utils/cryptoPolyfill';
+
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';

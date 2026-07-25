@@ -17,7 +17,8 @@ import {
 const PICKER_LIST_MAX_HEIGHT = Math.round(Dimensions.get('window').height * 0.6);
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path, Circle } from 'react-native-svg';
-import { supabase } from '../utils/supabase';
+import { addRecord } from '../utils/localHistory';
+import { maybeContribute } from '../utils/contribute';
 import { GeminiResponse } from '../types';
 import {
   TIME_OPTIONS,
@@ -117,24 +118,24 @@ export default function ConfirmInformationScreen({ navigation, route }: any) {
       });
 
       if (medicationData) {
-        // Construct the row in the finalized schema format for the Labels table.
-        // `language` is a top-level column (validated by the backend); the
-        // pictogram_categories object holds exactly the 6 category keys.
-        const labelRow = {
+        // Save the personal record to on-device encrypted storage only.
+        const saved = await addRecord({
           raw_ocr_reference: medicationData.raw_ocr_reference || '',
           medication_name: medicationData.medication_name || '',
           language: medicationData.language || 'none',
-          pictogram_categories: finalCategories,
-        };
+          pictogram_categories: finalCategories as GeminiResponse['pictogram_categories'],
+        });
+        savedId = saved.id;
 
-        const { data, error } = await supabase
-          .from('Labels')
-          .insert([labelRow])
-          .select('id')
-          .single();
-
-        if (error) throw error;
-        savedId = String(data.id);
+        // Separately, offer to contribute an anonymized copy (model suggestion +
+        // the user's final correction) to the shared dataset. Opt-in, and
+        // fire-and-forget so it never blocks or fails this flow.
+        maybeContribute({
+          raw_ocr_reference: medicationData.raw_ocr_reference || '',
+          language: medicationData.language || 'none',
+          suggested: (medicationData.pictogram_categories || {}) as Record<string, string | null>,
+          correction: finalCategories,
+        });
       }
 
       navigation.navigate('LanguageSelection', {

@@ -11,7 +11,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import { LabelRecord } from '../types';
-import { supabase } from '../utils/supabase';
+import { getHistory } from '../utils/localHistory';
 import { format, formatDistanceToNow, isToday, isThisWeek } from 'date-fns';
 import Svg, { Circle, Path } from 'react-native-svg';
 
@@ -91,12 +91,9 @@ export default function DashboardScreen({ navigation }: any) {
   const fetchLabels = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('Labels')
-        .select('*')
-        .order('created_at', { ascending: false });
-      if (error) throw error;
-      setLabels(data || []);
+      // Personal history lives only on this device (encrypted at rest).
+      const data = await getHistory();
+      setLabels(data);
     } catch {
       setLabels([]);
     } finally {
