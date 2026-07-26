@@ -205,7 +205,10 @@ async function parseMedicationLabel(ocrText) {
     contents: prompt,
     config: {
       responseMimeType: 'application/json',
-      thinkingConfig: { thinkingBudget: 0 }, // no reasoning needed for structured extraction - saves seconds
+      // A small reasoning budget noticeably improves accuracy on messy / low-quality
+      // OCR text (ambiguous phrasing, garbled words) while adding only ~1s of latency.
+      // 0 = fastest but brittle; keep this modest so clean labels stay fast.
+      thinkingConfig: { thinkingBudget: 1024 },
     },
   });
 
@@ -258,29 +261,26 @@ function validateLlmOutput(rawText) {
     errors.push(`language "${parsed.language}" is not an allowed language code`);
   }
 
-  // 6. pictogram_categories is an object with the 6 keys, each a valid ID or null
+  // 6. pictogram_categories: coerce anything invalid to null instead of failing.
+  //    A single bad/unknown ID should just drop that one pictogram, not throw
+  //    away the whole scan. The frontend already ignores null categories, so a
+  //    dropped ID simply doesn't appear on the label (it never renders "null").
+  //    The 6 category keys are always present afterwards (missing -> null).
   const cats = parsed.pictogram_categories;
   if (typeof cats !== 'object' || cats === null || Array.isArray(cats)) {
     errors.push('pictogram_categories must be an object');
   } else {
     for (const cat of CATEGORIES) {
-      if (!(cat in cats)) {
-        errors.push(`pictogram_categories missing key: ${cat}`);
-        continue;
-      }
       const val = cats[cat];
-      if (val === null) continue; // null is allowed
-      if (typeof val !== 'string') {
-        errors.push(`${cat} must be a string or null`);
-        continue;
-      }
-      // Every pictogram ID must be in the allowed set
-      if (!ALLOWED_IDS.has(val)) {
-        errors.push(`${cat} has invalid pictogram ID: ${val}`);
-      }
-      // And the ID must belong to the right category
-      if (!val.startsWith(cat + '.')) {
-        errors.push(`${cat} has mismatched ID: ${val}`);
+      // Keep only a valid, allowlisted, in-category string ID. Everything else
+      // (missing, null, wrong type, unknown ID, wrong category prefix) -> null.
+      if (typeof val === 'string' && ALLOWED_IDS.has(val) && val.startsWith(cat + '.')) {
+        cats[cat] = val;
+      } else {
+        if (typeof val === 'string' && val.length > 0) {
+          console.warn(`Dropping invalid pictogram ID for ${cat}: ${val}`);
+        }
+        cats[cat] = null;
       }
     }
   }
